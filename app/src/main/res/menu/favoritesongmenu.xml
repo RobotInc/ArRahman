@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/fav_song_search"
+        android:icon="@drawable/search"
+        android:iconifiedByDefault="true"
+        android:orderInCategory="1"
+        android:title="search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/nav_log"
+
+        android:title="Log out" />
+    <item
+        android:id="@+id/feedback"
+        android:icon="@drawable/ic_feedback"
+        android:title="Feedback" />
+    <item
+        android:id="@+id/about"
+
+        android:title="About" />
+</menu>

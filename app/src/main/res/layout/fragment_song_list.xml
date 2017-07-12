@@ -1,0 +1,25 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.bss.arrahmanlyrics.Fragments.songList">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+        android:id="@+id/albumPlayList"
+        android:clickable="true"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        app:fastScrollAutoHide="true"
+
+        app:fastScrollAutoHideDelay="1500"
+        app:fastScrollPopupBackgroundSize="64dp"
+        app:fastScrollPopupBgColor="#46f99c"
+        app:fastScrollPopupTextColor="#46f99c"
+        app:fastScrollPopupTextSize="44sp"
+        app:fastScrollThumbColor="#46f99c"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+</FrameLayout>

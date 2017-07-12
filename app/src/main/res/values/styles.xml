@@ -1,0 +1,40 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@android:color/background_dark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryText</item>
+        <item name="colorAccent">@android:color/holo_orange_light</item>
+        <item name="android:colorBackground">?attr/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+        <item name="android:textColorSecondary">@color/common_google_signin_btn_text_dark_default
+        </item>
+        <item name="android:itemTextAppearance">@style/TextAppearance</item>
+        <item name="android:textColorSecondaryInverse">@color/colorPrimary</item>
+        <item name="android:actionMenuTextColor">@color/translucent_white_8p</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
+    <style name="TextAppearance">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#546E7A</item>
+        <item name="android:textColorPrimary">#37474F</item>
+        <item name="android:background">#B0BEC5</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/ar</item>
+    </style>
+</resources>

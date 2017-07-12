@@ -1,0 +1,239 @@
+{
+  "project_info": {
+    "project_number": "1078531366146",
+    "firebase_url": "https://lyricsdatabase-18360.firebaseio.com",
+    "project_id": "lyricsdatabase-18360",
+    "storage_bucket": "lyricsdatabase-18360.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078531366146:android:d1da7b7c9668faee",
+        "android_client_info": {
+          "package_name": "net.robot_inc.arlyrics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078531366146-6pugu2r7j57266bb6malav4955opo95j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.robot_inc.arlyrics",
+            "certificate_hash": "2883f4ba40aa4bcc4f5948f20478a02860fa8cf2"
+          }
+        },
+        {
+          "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbNCM1iTObZfs_DW-ND8F2B_bOJ7gFrzc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078531366146:android:017373e956aa33cc",
+        "android_client_info": {
+          "package_name": "net.robot_inc.mainapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078531366146-rrarv1cu0nm1h9ieorpbiffajndukjf9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.robot_inc.mainapp",
+            "certificate_hash": "2883f4ba40aa4bcc4f5948f20478a02860fa8cf2"
+          }
+        },
+        {
+          "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbNCM1iTObZfs_DW-ND8F2B_bOJ7gFrzc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078531366146:android:c8141736a73ea1dd",
+        "android_client_info": {
+          "package_name": "com.beyonitysoftwaresolutions.arrahmanlyrics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078531366146-tq4tcipgg7e0bvh4b86golgmd0ggjt9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beyonitysoftwaresolutions.arrahmanlyrics",
+            "certificate_hash": "2883f4ba40aa4bcc4f5948f20478a02860fa8cf2"
+          }
+        },
+        {
+          "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbNCM1iTObZfs_DW-ND8F2B_bOJ7gFrzc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078531366146:android:35bd9a2be860d91a",
+        "android_client_info": {
+          "package_name": "com.bss.arlyrics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078531366146-vum3u845gas293uiud4nalt9scftdk8t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bss.arlyrics",
+            "certificate_hash": "2883f4ba40aa4bcc4f5948f20478a02860fa8cf2"
+          }
+        },
+        {
+          "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbNCM1iTObZfs_DW-ND8F2B_bOJ7gFrzc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078531366146:android:9c1e6be523dd0e10",
+        "android_client_info": {
+          "package_name": "com.bss.arrahmanlyrics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078531366146-0ieb1bfsqtm6a7j5ohipilq5foia8st0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bss.arrahmanlyrics",
+            "certificate_hash": "67f9ad1966a8c88cc85c629a50e16c3ec773e1b5"
+          }
+        },
+        {
+          "client_id": "1078531366146-r9tmmquitpkbk4nuvk2j74ftn5l9kbec.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bss.arrahmanlyrics",
+            "certificate_hash": "2883f4ba40aa4bcc4f5948f20478a02860fa8cf2"
+          }
+        },
+        {
+          "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbNCM1iTObZfs_DW-ND8F2B_bOJ7gFrzc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078531366146-6s8oi2mkctkppq5hgqukvu901ck18q35.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
