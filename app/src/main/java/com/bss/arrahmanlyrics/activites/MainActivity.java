@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity
 		} else {
 			super.onBackPressed();
 		}*/
+		getWindow().closeAllPanels();
 		AlertDialog.Builder builder;
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			builder = new AlertDialog.Builder(MainActivity.this);

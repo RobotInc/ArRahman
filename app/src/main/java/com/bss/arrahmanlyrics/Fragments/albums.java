@@ -391,7 +391,7 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 
 			View aboutPage = new AboutPage(getActivity())
 					.isRTL(false)
-					.setImage(R.drawable.ic_launcher)
+					.setImage(R.mipmap.ic_launcher)
 					.addItem(versionElement)
 					.addGroup("Connect with us")
 					.addEmail("elmehdi.sakout@gmail.com")
@@ -402,9 +402,10 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 					.addPlayStore("com.ideashower.readitlater.pro")
 					.addGitHub("medyo")
 					.addInstagram("medyo80")
+
 					.create();
 			getActivity().setContentView(aboutPage);
-			return true;
+			return false;
 
 		default:
 		return super.onOptionsItemSelected(item);
