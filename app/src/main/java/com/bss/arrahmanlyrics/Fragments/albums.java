@@ -47,6 +47,9 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import mehdi.sakout.aboutpage.AboutPage;
+import mehdi.sakout.aboutpage.Element;
+
 import static android.R.attr.id;
 
 
@@ -378,12 +381,31 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 			startActivity(intent);
 			return true;
 		case R.id.about:
-			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+			/*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		    builder.setTitle(R.string.title);
 			builder.setMessage(R.string.description);
 			builder.setPositiveButton(R.string.ok, null);
-			builder.show();
+			builder.show();*/
+			Element versionElement = new Element();
+			versionElement.setTitle("Version 1.01");
+
+			View aboutPage = new AboutPage(getActivity())
+					.isRTL(false)
+					.setImage(R.drawable.ic_launcher)
+					.addItem(versionElement)
+					.addGroup("Connect with us")
+					.addEmail("elmehdi.sakout@gmail.com")
+					.addWebsite("http://medyo.github.io/")
+					.addFacebook("the.medy")
+					.addTwitter("medyo80")
+					.addYoutube("UCdPQtdWIsg7_pi4mrRu46vA")
+					.addPlayStore("com.ideashower.readitlater.pro")
+					.addGitHub("medyo")
+					.addInstagram("medyo80")
+					.create();
+			getActivity().setContentView(aboutPage);
 			return true;
+
 		default:
 		return super.onOptionsItemSelected(item);
 	}

@@ -158,7 +158,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				if(dataSnapshot.exists()){
-					Toast("am inisde datashot");
+					Toast("");
 					HashMap<String,Object> fav = (HashMap<String, Object>) dataSnapshot.getValue();
 					HashMap<String,Object> movies = (HashMap<String, Object>) fav.get("Fav Songs");
 					ArrayList<String> Favsonglist = new ArrayList<String>();
