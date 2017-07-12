@@ -45,6 +45,7 @@
             android:name=".activites.feedback"
             android:label="@string/title_activity_feedback"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activites.about"></activity>
 
     </application>
 

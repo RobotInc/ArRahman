@@ -25,6 +25,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -231,18 +232,7 @@ public class MainActivity extends AppCompatActivity
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle navigation view item clicks here.
-		int id = item.getItemId();
 
-		if (id == R.id.nav_log) {
-			mFirebaseAuth.signOut();
-			Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-			signIn();
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 	@Override
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -474,5 +464,40 @@ public class MainActivity extends AppCompatActivity
 
 		builder.show();
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+			case R.id.nav_log:
+				mFirebaseAuth.signOut();
+				Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+				signIn();
+				return true;
+			case R.id.feedback:
+				Intent intent = new Intent(getApplicationContext(), feedback.class);
+				startActivity(intent);
+				return true;
+			case R.id.about:
+			/*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		    builder.setTitle(R.string.title);
+			builder.setMessage(R.string.description);
+			builder.setPositiveButton(R.string.ok, null);
+			builder.show();*/
+
+				Intent aboutPage = new Intent(getApplicationContext(),about.class);
+				startActivity(aboutPage);
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu,menu);
+		return true;
 	}
 }

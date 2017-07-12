@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 
 import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.activites.MainActivity;
+import com.bss.arrahmanlyrics.activites.about;
 import com.bss.arrahmanlyrics.activites.feedback;
 import com.bss.arrahmanlyrics.activites.lyricsActivity;
 import com.bss.arrahmanlyrics.adapter.albumAdapter;
@@ -373,43 +374,6 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 		return filteralbumlist;
 	}
 
-@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	switch (item.getItemId()) {
-		case R.id.feedback:
-			Intent intent = new Intent(getContext(), feedback.class);
-			startActivity(intent);
-			return true;
-		case R.id.about:
-			/*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		    builder.setTitle(R.string.title);
-			builder.setMessage(R.string.description);
-			builder.setPositiveButton(R.string.ok, null);
-			builder.show();*/
-			Element versionElement = new Element();
-			versionElement.setTitle("Version 1.01");
 
-			View aboutPage = new AboutPage(getActivity())
-					.isRTL(false)
-					.setImage(R.mipmap.ic_launcher)
-					.addItem(versionElement)
-					.addGroup("Connect with us")
-					.addEmail("elmehdi.sakout@gmail.com")
-					.addWebsite("http://medyo.github.io/")
-					.addFacebook("the.medy")
-					.addTwitter("medyo80")
-					.addYoutube("UCdPQtdWIsg7_pi4mrRu46vA")
-					.addPlayStore("com.ideashower.readitlater.pro")
-					.addGitHub("medyo")
-					.addInstagram("medyo80")
-
-					.create();
-			getActivity().setContentView(aboutPage);
-			return false;
-
-		default:
-		return super.onOptionsItemSelected(item);
-	}
-}
 
 }
