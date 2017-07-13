@@ -506,7 +506,9 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 		super.onDestroy();
 		mainApp.getPlayer().stopCacheListener();
 		mainApp.getPlayer().pause();
+		finish();
 	}
+
 
 
 }

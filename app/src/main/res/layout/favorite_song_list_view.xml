@@ -53,7 +53,17 @@
             android:text="SONG TITLE"
             android:textColor="#ffffff"
             android:textSize="16sp"/>
-
+        <com.bss.arrahmanlyrics.utils.lyricsTextView
+            android:id="@+id/favMovietitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.8"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingTop="4dp"
+            android:text="Movie Title"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="14sp"/>
         <com.bss.arrahmanlyrics.utils.lyricsTextView
             android:id="@+id/favSonglyricist"
             android:layout_width="wrap_content"
@@ -62,8 +72,8 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingTop="4dp"
-            android:text="SONG ARTIST"
-            android:textColor="#4590fa"
+            android:text="Song Lyricist"
+            android:textColor="@android:color/holo_orange_light"
             android:textSize="14sp"/>
 
     </LinearLayout>

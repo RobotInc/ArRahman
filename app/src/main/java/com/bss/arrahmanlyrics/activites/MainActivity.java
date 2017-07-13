@@ -184,11 +184,9 @@ public class MainActivity extends AppCompatActivity
 		}*/
 		getWindow().closeAllPanels();
 		AlertDialog.Builder builder;
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+
 			builder = new AlertDialog.Builder(MainActivity.this);
-		} else {
-			builder = new AlertDialog.Builder(MainActivity.this, AlertDialog.BUTTON_NEUTRAL);
-		}
+
 		builder.setTitle("Thank You");
 		builder.setMessage("Thank You For Using Our Application Please Give Us Your Suggestions and Feedback ");
 		builder.setNegativeButton("RATE US",
@@ -236,7 +234,7 @@ public class MainActivity extends AppCompatActivity
 
 	@Override
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+		signinTry();
 	}
 
 	@Override
@@ -251,8 +249,7 @@ public class MainActivity extends AppCompatActivity
 
 			handleSignInResult(result);
 		} else {
-			Toast.makeText(getApplicationContext(), "App needs you to login to work smoothly open the app again and login with google account", Toast.LENGTH_LONG).show();
-			Log.e("bss test", "singin failed");
+			signinTry();
 		}
 	}
 
@@ -268,7 +265,7 @@ public class MainActivity extends AppCompatActivity
 
 
 		} else {
-			Toast.makeText(getApplicationContext(), "App needs you to login to work smoothly open the app again and login with google account", Toast.LENGTH_LONG).show();
+
 
 			signinTry();
 		}
@@ -298,9 +295,7 @@ public class MainActivity extends AppCompatActivity
 						//userEmailId.setText(user.getEmail());
 						if (!task.isSuccessful()) {
 							Log.w("Sign in", "signInWithCredential", task.getException());
-							Toast.makeText(MainActivity.this, "Authentication failed. Please Check your Internet Connection and Open the app again...",
-									Toast.LENGTH_LONG).show();
-							signinTry();
+														signinTry();
 						}
 						// ...
 					}

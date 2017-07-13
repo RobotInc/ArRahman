@@ -38,7 +38,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, lyricist;
+        public TextView name, lyricist,movietitle;
         ImageView dots;
         ImageView eq;
 
@@ -49,6 +49,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
             super(view);
             name = (TextView) view.findViewById(R.id.Songtitle);
             lyricist = (TextView) view.findViewById(R.id.Songlyricist);
+            movietitle = (TextView) view.findViewById(R.id.MovieTitle);
 
             imageView = (CircularImageView) view.findViewById(R.id.songCover);
 
@@ -86,7 +87,8 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
         //holder.name.setText(actualsong.getSongTitle());
         Glide.with(mContext).load(actualsong.getImages()).into(holder.imageView);
 
-        holder.lyricist.setText(FirstLetterUpperCase.convert("Lyricist: " + actualsong.getLyricistName())+" | Movie: "+FirstLetterUpperCase.convert(actualsong.getMovietitle()));
+        holder.lyricist.setText(FirstLetterUpperCase.convert("Lyricist: " + actualsong.getLyricistName()));
+        holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: " + actualsong.getMovietitle()));
         //holder.lyricist.setText("Lyricist : " + actualsong.getLyricistNames());
 
 

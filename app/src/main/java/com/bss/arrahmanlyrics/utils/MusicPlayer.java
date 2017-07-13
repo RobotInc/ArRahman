@@ -263,8 +263,7 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 			currentPlayingSong = song.getSongTitle();
 			//checkFavoriteItem(song.getSongTitle());
 			setLyricsManually(Movie, song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(Movie);
+
 		} else if (songIndex == totalSongs - 1) {
 
 			Song song = currentList.get(0);
@@ -275,8 +274,7 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 			currentPlayingSong = song.getSongTitle();
 			//checkFavoriteItem(song.getSongTitle());
 			setLyricsManually(Movie, song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(Movie);
+
 		}
 
 	}
@@ -313,8 +311,7 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 			currentPlayingSong = song.getSongTitle();
 			//checkFavoriteItem(song.getSongTitle());
 			setLyricsManually(Movie, song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(Movie);
+
 
 		} else if (songIndex == 0) {
 			Song song = currentList.get(totalSongs - 1);
@@ -326,8 +323,7 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 			//checkFavoriteItem(song.getSongTitle());
 			//setBackground(song.getImage());
 			setLyricsManually(Movie, song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(song.getSongTitle());
-			((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(Movie);
+
 		}
 
 /*		int totalSongs = ulrs.size();
@@ -504,8 +500,8 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 
 				manualSong = (HashMap<String, Object>) dataSnapshot.getValue();
 				Log.i("Selected Song", String.valueOf(manualSong));
-				((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(songTitle);
-				((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(albumname);
+				((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(FirstLetterUpperCase.convert(songTitle));
+				((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(FirstLetterUpperCase.convert(albumname));
 				setLyrics(manualSong);
 				checkFavoriteItem(Movie, currentPlayingSong);
 				Log.i("Song Favorite", songTitle);
@@ -587,8 +583,8 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 			dialog.setMessage("Loading Song From database...");
 			dialog.show();
 			player.prepareAsync();
-			((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(name);
-			((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(Movie);
+			((TextView) enLyrics.getActivity().findViewById(R.id.song_title)).setText(FirstLetterUpperCase.convert(name));
+			((TextView) enLyrics.getActivity().findViewById(R.id.album_title)).setText(FirstLetterUpperCase.convert(Movie));
 		} catch (IOException e) {
 			//Log.e("error source", String.valueOf(download);
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
