@@ -83,7 +83,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lyrics2);
 		overridePendingTransition(R.anim.slide_in_up, R.anim.fade_back);
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar = (Toolbar) findViewById(R.id.lyricstoolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		//().setStatusBarColor(Color.parseColor("#a000ffae"));
@@ -509,6 +509,13 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 		finish();
 	}
 
-
-
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(mainApp.getPlayer()!=null){
+			if(mainApp.getPlayer().isPlaying()){
+				mainApp.getPlayer().pause();
+			}
+		}
+	}
 }

@@ -72,7 +72,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
-		implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+		implements GoogleApiClient.OnConnectionFailedListener {
 	GoogleApiClient mGoogleApiClient;
 	private FirebaseAuth mFirebaseAuth;
 	private FirebaseAuth.AuthStateListener mAuthListener;
@@ -85,25 +85,18 @@ public class MainActivity extends AppCompatActivity
 	private ViewPager mViewPager;
 	ProgressDialog dialog;
 	public FirebaseUser user;
-	HashMap<String, Object> movies;
+
 	private InterstitialAd mInterstitialAd;
-	AVLoadingIndicatorView avi;
+
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-
-
-
-		/*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-		drawer.setDrawerListener(toggle);
-		toggle.syncState();*/
 
 
 		mFirebaseAuth = FirebaseAuth.getInstance();
@@ -176,12 +169,7 @@ public class MainActivity extends AppCompatActivity
 
 	@Override
 	public void onBackPressed() {
-		/*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		if (drawer.isDrawerOpen(GravityCompat.START)) {
-			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			super.onBackPressed();
-		}*/
+
 		getWindow().closeAllPanels();
 		AlertDialog.Builder builder;
 
@@ -211,24 +199,6 @@ public class MainActivity extends AppCompatActivity
 		builder.show();
 	}
 
-
-	@SuppressWarnings("StatementWithEmptyBody")
-	@Override
-	public boolean onNavigationItemSelected(MenuItem item) {
-		// Handle navigation view item clicks here.
-		int id = item.getItemId();
-
-		if (id == R.id.nav_log) {
-			mFirebaseAuth.signOut();
-			Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-			signIn();
-		}
-
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawer.closeDrawer(GravityCompat.START);
-
-		return true;
-	}
 
 
 
@@ -302,20 +272,7 @@ public class MainActivity extends AppCompatActivity
 				});
 	}
 
-	public static Bitmap getBitmapFromURL(String src) {
-		try {
-			URL url = new URL(src);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoInput(true);
-			connection.connect();
-			InputStream input = connection.getInputStream();
-			Bitmap myBitmap = BitmapFactory.decodeStream(input);
-			return myBitmap;
-		} catch (IOException e) {
-			// Log exception
-			return null;
-		}
-	}
+
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -355,6 +312,7 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public void onStart() {
 		super.onStart();
+
 
 	}
 
@@ -427,14 +385,7 @@ public class MainActivity extends AppCompatActivity
 
 			}
 		});
-		/**NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-		 navigationView.setNavigationItemSelectedListener(this);
-		 View view = navigationView.getHeaderView(0);
-		 userEmailId = (TextView) view.findViewById(R.id.email);
-		 userEmailId.setText(user.getEmail());
 
-		 Typeface english = Typeface.createFromAsset(getResources().getAssets(), "english.ttf");
-		 userEmailId.setTypeface(english);**/
 
 	}
 	public void signinTry(){
@@ -475,12 +426,6 @@ public class MainActivity extends AppCompatActivity
 				startActivity(intent);
 				return true;
 			case R.id.about:
-			/*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		    builder.setTitle(R.string.title);
-			builder.setMessage(R.string.description);
-			builder.setPositiveButton(R.string.ok, null);
-			builder.show();*/
-
 				Intent aboutPage = new Intent(getApplicationContext(),about.class);
 				startActivity(aboutPage);
 				return true;

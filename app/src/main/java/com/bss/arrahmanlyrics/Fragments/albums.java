@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.activites.MainActivity;
@@ -260,6 +261,7 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 	@Override
 	public void onDetach() {
 		super.onDetach();
+
 		mListener = null;
 	}
 
@@ -327,6 +329,7 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 	public void onPause() {
 		super.onPause();
 
+
 	}
 
 	public Bitmap getBitmap(String imageString) {
@@ -374,6 +377,11 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 		return filteralbumlist;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+
+	}
 
 
 }

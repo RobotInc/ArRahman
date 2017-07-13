@@ -44,12 +44,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import es.claucookie.miniequalizerlibrary.EqualizerView;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -117,9 +122,9 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 
-		View view = inflater.inflate(R.layout.fragment_song_list, container, false);
+		View rootview = inflater.inflate(R.layout.fragment_song_list, container, false);
 		setHasOptionsMenu(true);
-		songlistView = (FastScrollRecyclerView) view.findViewById(R.id.albumPlayList);
+		songlistView = (FastScrollRecyclerView) rootview.findViewById(R.id.albumPlayList);
 		passedList = getActivity().getIntent().getExtras().getParcelableArrayList("list");
 
 		songsListArray = new ArrayList<>();
@@ -134,6 +139,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 			@Override
 			public void onItemClick(View view, int position) {
 				songWithTitle song = filtered.get(position);
+
 				mainApp.getPlayer().setPlay(song.getSongTitle());
 				//mainApp.getPlayer().setLyricsManually(getActivity().getIntent().getExtras().getString("Title"), song.getSongTitle());
 			}
@@ -157,7 +163,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		});
 		adapter.notifyDataSetChanged();
 
-		return view;
+		return rootview;
 	}
 
 	private void prepareSongList() {
@@ -198,11 +204,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		if(newText.length()>0){
-			((TextView) getActivity().findViewById(R.id.album_title)).setVisibility(TextView.INVISIBLE);
-		}else {
-			((TextView) getActivity().findViewById(R.id.album_title)).setVisibility(TextView.VISIBLE);
-		}
+
 		filtered = new ArrayList<>();
 		filtered = filterAlbum(songsListArray, newText);
 		if (TextUtils.isEmpty(newText)) {
@@ -251,19 +253,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		inflater.inflate(R.menu.main, menu);
 		searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.list_search));
 		searchView.setOnQueryTextListener(this);
-		searchView.setOnSearchClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				((TextView) getActivity().findViewById(R.id.album_title)).setVisibility(TextView.INVISIBLE);
-			}
-		});
-		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-			@Override
-			public boolean onClose() {
-				((TextView) getActivity().findViewById(R.id.album_title)).setVisibility(TextView.VISIBLE);
-				return true;
-			}
-		});
+
 		searchView.setQueryHint("Search songs");
 
 
@@ -272,7 +262,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 	@Override
 	public void onResume() {
 		super.onResume();
-		Toast.makeText(getContext(), "scroll ", Toast.LENGTH_LONG).show();
+
 	}
 
 	public void scrollTo(String songTitle) {
@@ -300,5 +290,23 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		}
 		return filteralbumlist;
 	}
+/*
+	public void setEq(int newPosition,int OldPosition){
+		try {
+			/*EqualizerView eqold = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(OldPosition).itemView).findViewById      (R.id.equalizer_view);
+
+			eqold.setVisibility(View.INVISIBLE);
+			Toast.makeText(getContext(),"new position: "+newPosition+" old position : "+OldPosition+" adapter size : "+adapter.getItemCount(),Toast.LENGTH_LONG).show();
+			EqualizerView eqnew = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(newPosition).itemView).findViewById      (R.id.equalizer_view);
+
+			eqnew.setVisibility(View.VISIBLE);
+		}catch (Exception e){
+			Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+		}
+
+
+
+
+	}*/
 
 }

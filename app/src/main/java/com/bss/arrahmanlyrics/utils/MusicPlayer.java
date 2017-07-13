@@ -76,6 +76,8 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 	OtherLyrics oLyrics;
 	ImageView cover, favorites;
 	int positioninCurrentList = 0;
+	boolean mIsDucked = false,mLostAudioFocus = false;
+	int oldPosition = 0;
 
 	private boolean ongoingCall = false;
 
@@ -247,35 +249,39 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 		if (player.isPlaying()) {
 			player.pause();
 			resumePosition = player.getCurrentPosition();
+			playButton.setImageResource(R.drawable.btnplay);
 		}
 
 	}
 
 	public void next() {
 
-		int totalSongs = currentList.size();
-		if (totalSongs > 0 && songIndex < totalSongs - 1) {
-			Song song = currentList.get(songIndex + 1);
-			changeSong(song.getUlr(), song.getSongTitle());
-			ulrsIndex = ulrs.indexOf(song);
-			songIndex++;
-			Movie = song.getMovieTitle();
-			currentPlayingSong = song.getSongTitle();
-			//checkFavoriteItem(song.getSongTitle());
-			setLyricsManually(Movie, song.getSongTitle());
+			int totalSongs = currentList.size();
+			if (totalSongs > 0 && songIndex < totalSongs - 1) {
+				Song song = currentList.get(songIndex + 1);
+				changeSong(song.getUlr(), song.getSongTitle());
+				ulrsIndex = ulrs.indexOf(song);
+				//songListFragment.setEq(ulrsIndex,oldPosition);
+				songIndex++;
+				Movie = song.getMovieTitle();
+				currentPlayingSong = song.getSongTitle();
+				//checkFavoriteItem(song.getSongTitle());
+				setLyricsManually(Movie, song.getSongTitle());
 
-		} else if (songIndex == totalSongs - 1) {
+			} else if (songIndex == totalSongs - 1) {
 
-			Song song = currentList.get(0);
-			changeSong(song.getUlr(), song.getSongTitle());
-			ulrsIndex = ulrs.indexOf(song);
-			songIndex = 0;
-			Movie = song.getMovieTitle();
-			currentPlayingSong = song.getSongTitle();
-			//checkFavoriteItem(song.getSongTitle());
-			setLyricsManually(Movie, song.getSongTitle());
+				Song song = currentList.get(0);
+				changeSong(song.getUlr(), song.getSongTitle());
+				ulrsIndex = ulrs.indexOf(song);
+				songIndex = 0;
+				Movie = song.getMovieTitle();
+				currentPlayingSong = song.getSongTitle();
+				//checkFavoriteItem(song.getSongTitle());
+				setLyricsManually(Movie, song.getSongTitle());
 
-		}
+			}
+
+
 
 	}
 
@@ -368,6 +374,7 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 			player.seekTo(resumePosition);
 			player.start();
 		}
+		playButton.setImageResource(R.drawable.btnpause);
 	}
 
 	public void shuffle() {
@@ -401,52 +408,54 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 
 	public void stop() {
 		player.stop();
+		playButton.setImageResource(R.drawable.btnplay);
 
 	}
 
 
 	@Override
 	public void onAudioFocusChange(int focusChange) {
-
-
-		//Invoked when the audio focus of the system is updated.
+		String TAG = "Audio Manager";
 		switch (focusChange) {
-			case AudioManager.AUDIOFOCUS_GAIN:
-				// resume playback
-				if (player != null) {
-					if (!player.isPlaying()) player.start();
-					player.setVolume(1.0f, 1.0f);
-				}
-				break;
 			case AudioManager.AUDIOFOCUS_LOSS:
-				// Lost focus for an unbounded amount of time: stop playback and release media player
-				if (player != null) {
-					if (player.isPlaying()) player.stop();
-					player.release();
-					player = null;
+				Log.d(TAG, "AudioFocus Loss");
+				if (isPlaying()) {
+					pause();
+					//service.stopSelf();
 				}
-
-				break;
-			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-				// Lost focus for a short time, but we have to stop
-				// playback. We don't release the media player because playback
-				// is likely to resume
-				if (player != null) {
-					if (player.isPlaying()) player.pause();
-				}
-
 				break;
 			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-				// Lost focus for a short time, but it's ok to keep playing
-				// at an attenuated level
-				if (player != null) {
-					if (player.isPlaying()) player.setVolume(0.1f, 0.1f);
+				if (isPlaying()) {
+					player.setVolume(0.3f, 0.3f);
+					mIsDucked = true;
 				}
-
+				Log.d(TAG, "AudioFocus Loss Can Duck Transient");
 				break;
+			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+				Log.d("", "AudioFocus Loss Transient");
+				if (isPlaying()) {
+					pause();
+					mLostAudioFocus = true;
+				}
+				break;
+			case AudioManager.AUDIOFOCUS_GAIN:
+				Log.d(TAG, "AudioFocus Gain");
+				if (mIsDucked) {
+					player.setVolume(1.0f, 1.0f);
+					mIsDucked = false;
+				} else if (mLostAudioFocus) {
+					// If we temporarily lost the audio focus we can resume playback here
+					if (player.isPlaying()) {
+						play();
+					}
+					mLostAudioFocus = false;
+				}
+				break;
+			default:
+				Log.d(TAG, "Unknown focus");
 		}
-
 	}
+
 
 	private void callStateListener() {
 		// Get the telephony manager

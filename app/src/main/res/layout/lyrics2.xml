@@ -18,63 +18,29 @@
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
                                                  android:fitsSystemWindows="true">
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:backgroundTint="@android:color/transparent"
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
+        android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/lyricstoolbar"
             android:layout_width="match_parent"
+
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
-            android:backgroundTint="@android:color/transparent"/>
+            android:backgroundTint="@android:color/transparent">
 
-    </android.support.design.widget.AppBarLayout>
-    <ImageView
-        android:id="@+id/blurArtwork"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/default_artwork_bg"
-        android:fitsSystemWindows="true"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bgcolor">
-
-
-
-        <LinearLayout
-            android:id="@+id/song_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
-            <!--
-                        <ImageButton
-                            android:id="@+id/action_favorite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@null"
-                           android:paddingLeft="2dp"
-                            android:paddingRight="0dp"
-                            android:src="@drawable/ic_action_favorite"/>
-            -->
             <LinearLayout
                 android:id="@+id/topView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+
                 android:orientation="vertical">
 
                 <TextView
@@ -108,18 +74,31 @@
             </LinearLayout>
 
 
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
+    <ImageView
+        android:id="@+id/blurArtwork"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_artwork_bg"
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"/>
 
-        </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@color/bgcolor">
 
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/detailseekbar"
-            android:layout_below="@+id/song_info"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="?attr/actionBarSize"
             android:layout_weight="7"
             android:clickable="true"
             android:gravity="center">

@@ -27,6 +27,8 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.claucookie.miniequalizerlibrary.EqualizerView;
+
 /**
  * Created by mohan on 5/20/17.
  */
@@ -38,9 +40,10 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, lyricist,movietitle;
+        public TextView name, lyricist, movietitle;
+     //   public EqualizerView eq;
         ImageView dots;
-        ImageView eq;
+
 
         CircularImageView imageView;
 
@@ -50,7 +53,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
             name = (TextView) view.findViewById(R.id.Songtitle);
             lyricist = (TextView) view.findViewById(R.id.Songlyricist);
             movietitle = (TextView) view.findViewById(R.id.MovieTitle);
-
+            //eq = (EqualizerView) view.findViewById(R.id.equalizer_view);
             imageView = (CircularImageView) view.findViewById(R.id.songCover);
 
 
@@ -74,7 +77,6 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
         return (MyViewHolder) holder;
     }
 
-    @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         songWithTitle actualsong = songlist.get(position);
 
@@ -89,6 +91,10 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
         holder.lyricist.setText(FirstLetterUpperCase.convert("Lyricist: " + actualsong.getLyricistName()));
         holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: " + actualsong.getMovietitle()));
+       // holder.eq.setVisibility(View.INVISIBLE);
+
+       // holder.eq.animateBars();
+
         //holder.lyricist.setText("Lyricist : " + actualsong.getLyricistNames());
 
 
@@ -99,9 +105,6 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
             }
         });*/
     }
-
-
-
 
 
     @Override
@@ -125,7 +128,8 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
         return res.toString().trim();
     }
-    public void setFilter(List<songWithTitle> songlists){
+
+    public void setFilter(List<songWithTitle> songlists) {
         songlist = new ArrayList<>();
         songlist.addAll(songlists);
         notifyDataSetChanged();

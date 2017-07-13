@@ -232,6 +232,7 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
 	@Override
 	public void onDetach() {
 		super.onDetach();
+
 		mListener = null;
 	}
 
