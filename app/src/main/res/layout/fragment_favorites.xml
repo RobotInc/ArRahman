@@ -1,10 +1,28 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             tools:context="com.bss.arrahmanlyrics.Fragments.favorites">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    tools:context="com.bss.arrahmanlyrics.Fragments.favorites">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-2287984365462163/5570471134">
+    </com.google.android.gms.ads.AdView>
     <!-- TODO: Update blank fragment layout -->
     <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
         android:id="@+id/favoriteSongPlayList"
@@ -21,4 +39,6 @@
         app:fastScrollPopupTextSize="44sp"
         app:fastScrollThumbColor="@android:color/holo_orange_light"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </LinearLayout>
+    </ScrollView>
 </FrameLayout>
