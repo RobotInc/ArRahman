@@ -1,28 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:background="@null"
-    android:backgroundTint="@null"
-    tools:context="com.bss.arrahmanlyrics.Fragments.favorites">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.google.android.gms.ads.NativeExpressAdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adUnitId="ca-app-pub-2287984365462163/1832785536"
-            ads:adSize="320x150">
-        </com.google.android.gms.ads.NativeExpressAdView>
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             tools:context="com.bss.arrahmanlyrics.Fragments.favorites">
 
     <!-- TODO: Update blank fragment layout -->
     <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
@@ -40,6 +21,4 @@
         app:fastScrollPopupTextSize="44sp"
         app:fastScrollThumbColor="@android:color/holo_orange_light"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    </LinearLayout>
-    </ScrollView>
 </FrameLayout>
