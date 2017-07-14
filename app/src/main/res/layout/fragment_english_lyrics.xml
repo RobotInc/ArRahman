@@ -24,7 +24,7 @@
             android:padding="9dp"
             android:lineSpacingExtra="3dp"
             android:text=""
-            android:textSize="16dp"
+            android:textSize="15dp"
             android:textColor="#d4cccc"
             android:id="@+id/lyricsEnglish"/>
 

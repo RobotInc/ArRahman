@@ -25,7 +25,7 @@
             android:text=""
             android:textColor="#d4cccc"
             android:textScaleX="1"
-            android:textSize="16dp"/>
+            android:textSize="15dp"/>
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"

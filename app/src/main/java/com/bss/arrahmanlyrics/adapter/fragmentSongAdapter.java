@@ -59,6 +59,8 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
             //albumCover = (ImageView) view.findViewById(R.id.album_artwork);
         }
+
+
     }
 
     public fragmentSongAdapter(Context mContext, List<songWithTitle> songlist) {

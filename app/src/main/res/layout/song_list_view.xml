@@ -74,7 +74,7 @@
             android:maxLines="1"
             android:paddingTop="4dp"
             android:text="Song Lyricist"
-            android:textColor="#a000ffae"
+            android:textColor="@android:color/holo_orange_light"
             android:textSize="14sp"/>
 
     </LinearLayout>

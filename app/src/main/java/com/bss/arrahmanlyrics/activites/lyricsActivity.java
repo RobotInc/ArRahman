@@ -69,7 +69,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 	boolean toggleFavorite = false;
 	ImageView cover;
 	Toolbar toolbar;
-
+	ImageView left,right;
 	SmallBang bang;
 	EditText searchBar;
 	LinearLayout topView;
@@ -105,7 +105,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				songListFragment.scrollTo(mainApp.getPlayer().getCurrentPlayingSong());
-								return false;
+				return false;
 
 			}
 		});
@@ -113,13 +113,61 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 		passedList = getIntent().getExtras().getParcelableArrayList("list");
 
 
+		left = (ImageView) findViewById(R.id.swifeleft);
+		right= (ImageView) findViewById(R.id.swiferight);
+		left.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int getItemNo = lyricsPager.getCurrentItem();
+				if(getItemNo > 0){
+					lyricsPager.setCurrentItem(getItemNo-1);
+				}
 
+			}
+		});
+
+		right.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int getItemNo = lyricsPager.getCurrentItem();
+				if(getItemNo< 2){
+					lyricsPager.setCurrentItem(getItemNo+1);
+				}
+
+			}
+		});
 
 		values = new HashMap<>();
 		lyricsPager.setAdapter(section);
 		lyricsPager.setCurrentItem(1);
 		lyricsPager.setOffscreenPageLimit(2);
+		lyricsPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+					if(position == 1){
+						left.setVisibility(View.VISIBLE);
+						right.setVisibility(View.VISIBLE);
+
+					}else if(position ==0){
+						right.setVisibility(View.VISIBLE);
+						left.setVisibility(View.INVISIBLE);
+
+					}else {
+						left.setVisibility(View.VISIBLE);
+						right.setVisibility(View.INVISIBLE);
+					}
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
 		movieName = getIntent().getExtras().getString("Title");
 		Log.e("selected Movie",movieName);
 		Log.e("selected song",getIntent().getExtras().getString("selectedSong"));
@@ -202,7 +250,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 
 			}
 		});*/
-	preparePlaylist();
+		preparePlaylist();
 
 	}
 
