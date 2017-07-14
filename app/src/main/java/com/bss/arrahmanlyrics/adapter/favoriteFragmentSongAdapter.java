@@ -74,10 +74,8 @@ public class favoriteFragmentSongAdapter extends RecyclerView.Adapter<favoriteFr
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         songWithTitle actualsong = songlist.get(position);
 
-        final Typeface title = Typeface.createFromAsset(mContext.getAssets(), "MavenPro.ttf");
-        final Typeface lyricist = Typeface.createFromAsset(mContext.getAssets(), "MavenPro.ttf");
-        holder.name.setTypeface(title);
-        holder.lyricist.setTypeface(lyricist);
+
+
 
         holder.name.setText(FirstLetterUpperCase.convert(actualsong.getSongTitle()));
         //holder.name.setText(actualsong.getSongTitle());

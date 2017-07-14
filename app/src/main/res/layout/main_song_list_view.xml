@@ -30,11 +30,11 @@
         android:id="@+id/songCover"
         android:layout_height="65dp"
         android:src="@drawable/ic_launcher"
-        app:civ_border_color="#020202"
+        app:civ_border_color="#ffffff"
         app:civ_border_width="2dp"
         app:civ_shadow="true"
         app:civ_shadow_radius="2"
-        app:civ_shadow_color="#ffffff"/>
+        app:civ_shadow_color="#8BC34A"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
         android:orientation="vertical">
 
         <com.bss.arrahmanlyrics.utils.lyricsTextView
-            android:id="@+id/Songtitle"
+            android:id="@+id/MainSongtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -57,7 +57,7 @@
 
 
         <com.bss.arrahmanlyrics.utils.lyricsTextView
-            android:id="@+id/MovieTitle"
+            android:id="@+id/MainMovieTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -66,8 +66,8 @@
             android:text="Movie Title"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="14sp"/>
-        <com.bss.arrahmanlyrics.utils.scrollText
-            android:id="@+id/Songlyricist"
+        <com.bss.arrahmanlyrics.utils.lyricsTextView
+            android:id="@+id/MainSonglyricist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
@@ -75,7 +75,7 @@
             android:scrollHorizontally="true"
             android:maxLines="1"
             android:paddingTop="4dp"
-            android:text="SONG LYRICIST"
+            android:text="Song Lyricist"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="14sp"/>
 

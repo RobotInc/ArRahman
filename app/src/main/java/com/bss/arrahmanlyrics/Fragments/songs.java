@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
+
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -236,11 +237,9 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
 
 		filtered = new ArrayList<>();
 		filtered = filterAlbum(songlist,newText);
-		if(TextUtils.isEmpty(newText)){
-			adapter.setFilter(songlist);
-		}else {
-			adapter.setFilter(filtered);
-		}
+
+		adapter.setFilter(filtered);
+
 
 		return true;
 	}
@@ -281,7 +280,7 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
 	}
 
 	public List<songWithTitle> filterAlbum(List<songWithTitle> listsongs, String query) {
-		query = query.toLowerCase();
+		query = query.toLowerCase().trim();
 		final List<songWithTitle> filteralbumlist = new ArrayList<>();
 		for (songWithTitle songs : listsongs) {
 			final String text1 = songs.getSongTitle().toLowerCase();
