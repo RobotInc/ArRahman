@@ -43,9 +43,9 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 
 		public MyViewHolder(View view) {
 			super(view);
-			name = (TextView) view.findViewById(R.id.Songtitle);
-			lyricist = (TextView) view.findViewById(R.id.Songlyricist);
-			movietitle = (TextView) view.findViewById(R.id.MovieTitle);
+			name = (TextView) view.findViewById(R.id.MainSongtitle);
+			lyricist = (TextView) view.findViewById(R.id.MainSonglyricist);
+			movietitle = (TextView) view.findViewById(R.id.MainMovieTitle);
 			//dots = (ImageButton) view.findViewById(R.id.menu_button);
 			imageView = (CircularImageView) view.findViewById(R.id.songCover);
 
@@ -82,7 +82,7 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 		holder.name.setText(FirstLetterUpperCase.convert(actualsong.getSongTitle()));
 		//holder.name.setText(actualsong.getSongTitle());
 		Glide.with(mContext).load(actualsong.getImages()).into(holder.imageView);
-		holder.lyricist.setSelected(true);
+
 		holder.lyricist.setText(FirstLetterUpperCase.convert("Lyricist: " + actualsong.getLyricistName()));
 		holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: " + actualsong.getMovietitle()));
 

@@ -30,7 +30,7 @@
         android:id="@+id/favsongCover"
         android:layout_height="65dp"
         android:src="@drawable/ic_launcher"
-        app:civ_border_color="#020202"
+        app:civ_border_color="#ffffff"
         app:civ_border_width="2dp"
         app:civ_shadow="true"
         app:civ_shadow_radius="2"
