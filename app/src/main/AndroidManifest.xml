@@ -41,10 +41,6 @@
             android:parentActivityName=".activites.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activites.feedback"
-            android:label="@string/title_activity_feedback"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activites.about"
             android:parentActivityName=".activites.MainActivity">
         </activity>

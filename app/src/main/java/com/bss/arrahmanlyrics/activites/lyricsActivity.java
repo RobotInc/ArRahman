@@ -86,6 +86,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 		toolbar = (Toolbar) findViewById(R.id.lyricstoolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 		//().setStatusBarColor(Color.parseColor("#a000ffae"));
 		links = new HashMap<>();
 		bang = SmallBang.attach2Window(this);
@@ -104,7 +105,8 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				songListFragment.scrollTo(mainApp.getPlayer().getCurrentPlayingSong());
-				return false;
+								return false;
+
 			}
 		});
 		//songList = new ArrayList<>();

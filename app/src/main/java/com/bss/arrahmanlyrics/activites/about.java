@@ -24,7 +24,7 @@ public class about extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 		String userEmail = user.getEmail();
-		String des = "We all Know how magical AR Rahman's tunes are! And its pleasure to sing along with the help of lyrics. So we made this musical app as a tribute to AR Rahman. Explore and feel the Music";
+		String des = "We all Know how magical AR Rahman's tunes are! And it's pleasure to sing along with the help of lyrics. So we made this musical app as a tribute to AR Rahman. Explore and feel the Music";
 		Element versionElement = new Element();
 		versionElement.setTitle("Version 1.01");
 		Element telegram = new Element();

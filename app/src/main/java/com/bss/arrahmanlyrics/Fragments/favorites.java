@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.activites.MainActivity;
-import com.bss.arrahmanlyrics.activites.feedback;
 import com.bss.arrahmanlyrics.activites.lyricsActivity;
 import com.bss.arrahmanlyrics.adapter.favoriteFragmentSongAdapter;
 import com.bss.arrahmanlyrics.mainApp;
@@ -350,10 +349,10 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.feedback:
+			/*case R.id.feedback:
 				Intent intent = new Intent(getContext(), feedback.class);
 				startActivity(intent);
-				return true;
+				return true;*/
 			case R.id.about:
 				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 				builder.setTitle(R.string.title);

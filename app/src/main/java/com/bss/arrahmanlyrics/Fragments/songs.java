@@ -1,20 +1,17 @@
 package com.bss.arrahmanlyrics.Fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,21 +22,14 @@ import android.widget.Toast;
 
 import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.activites.MainActivity;
-import com.bss.arrahmanlyrics.activites.feedback;
 import com.bss.arrahmanlyrics.activites.lyricsActivity;
-import com.bss.arrahmanlyrics.adapter.fragmentSongAdapter;
 import com.bss.arrahmanlyrics.adapter.mainFragmentSongAdapter;
 import com.bss.arrahmanlyrics.models.Song;
-import com.bss.arrahmanlyrics.models.slideSong;
 import com.bss.arrahmanlyrics.models.songWithTitle;
 import com.bss.arrahmanlyrics.utils.CustomLayoutManager;
 import com.bss.arrahmanlyrics.utils.DividerItemDecoration;
 import com.bss.arrahmanlyrics.utils.RecyclerItemClickListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.io.ByteArrayOutputStream;
@@ -319,10 +309,10 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.feedback:
+			/*case R.id.feedback:
 				Intent intent = new Intent(getContext(), feedback.class);
 				startActivity(intent);
-				return true;
+				return true;*/
 			case R.id.about:
 				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 				builder.setTitle(R.string.title);

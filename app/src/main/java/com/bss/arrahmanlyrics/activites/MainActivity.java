@@ -421,10 +421,10 @@ public class MainActivity extends AppCompatActivity
 				Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 				signIn();
 				return true;
-			case R.id.feedback:
+			/*case R.id.feedback:
 				Intent intent = new Intent(getApplicationContext(), feedback.class);
 				startActivity(intent);
-				return true;
+				return true;*/
 			case R.id.about:
 				Intent aboutPage = new Intent(getApplicationContext(),about.class);
 				startActivity(aboutPage);
