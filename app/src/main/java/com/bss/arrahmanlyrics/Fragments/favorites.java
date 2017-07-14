@@ -31,6 +31,8 @@ import com.bss.arrahmanlyrics.models.songWithTitle;
 import com.bss.arrahmanlyrics.utils.CustomLayoutManager;
 import com.bss.arrahmanlyrics.utils.DividerItemDecoration;
 import com.bss.arrahmanlyrics.utils.RecyclerItemClickListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -199,7 +201,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 
 
 		adapter.notifyDataSetChanged();
-		return view;
+        		return view;
 
 	}
 
