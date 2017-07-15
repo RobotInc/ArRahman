@@ -103,9 +103,4 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
 
-    <string name="title_activity_feedback">feedback</string>
-    <string name="ok">OK</string>
-    <string name="title">About Us</string>
-    <string name="description">
-     Version: 1.01\nDescription:\nContact:\nFacebook:https://www.facebook.com/beyonityss</string>
-</resources>
+    </resources>

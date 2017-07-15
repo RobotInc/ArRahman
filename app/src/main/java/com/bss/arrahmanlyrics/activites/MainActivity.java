@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity
 					public void onClick(DialogInterface dialog,
 					                    int which) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=ADD YOUR APPS PACKAGE NAME")); // Add package name of your application
+						intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.bss.arrahmanlyrics")); // Add package name of your application
 						startActivity(intent);
 						Toast.makeText(MainActivity.this, "Thank you for your Rating",
 								Toast.LENGTH_SHORT).show();

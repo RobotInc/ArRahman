@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -251,7 +252,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 			}
 		});*/
 		preparePlaylist();
-
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	private void preparePlaylist() {

@@ -357,13 +357,13 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 				Intent intent = new Intent(getContext(), feedback.class);
 				startActivity(intent);
 				return true;*/
-			case R.id.about:
+			/*case R.id.about:
 				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 				builder.setTitle(R.string.title);
 				builder.setMessage(R.string.description);
 				builder.setPositiveButton(R.string.ok, null);
 				builder.show();
-				return true;
+				return true;*/
 			default:
 				return super.onOptionsItemSelected(item);
 		}
