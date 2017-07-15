@@ -62,7 +62,7 @@
             android:maxLines="1"
             android:paddingTop="4dp"
             android:text="Movie Title"
-            android:textColor="@android:color/holo_orange_light"
+            android:textColor="#a000ffae"
             android:textSize="14sp"/>
         <com.bss.arrahmanlyrics.utils.lyricsTextView
             android:id="@+id/favSonglyricist"

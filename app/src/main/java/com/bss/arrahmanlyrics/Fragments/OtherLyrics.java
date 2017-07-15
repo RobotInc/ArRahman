@@ -93,8 +93,8 @@ public class OtherLyrics extends Fragment {
         lyricsText2 = (TextView) view.findViewById(R.id.lyricsOthers2) ;
         song_title = (TextView) getActivity().findViewById(R.id.song_title);
         album_title = (TextView) getActivity().findViewById(R.id.album_title);
-        song_title.setText(getActivity().getIntent().getExtras().getString("selectedSong"));
-        album_title.setText(getActivity().getIntent().getExtras().getString("Title"));
+        //song_title.setText(getActivity().getIntent().getExtras().getString("selectedSong"));
+        //album_title.setText(getActivity().getIntent().getExtras().getString("Title"));
         mAdView = (AdView) view.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .build();

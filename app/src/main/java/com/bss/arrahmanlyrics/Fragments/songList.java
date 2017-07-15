@@ -270,7 +270,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		for (songWithTitle song : songsListArray) {
 			if (song.getSongTitle().equals(songTitle)) {
 				int index = songsListArray.indexOf(song);
-				songlistView.scrollToPosition(index);
+				songlistView.smoothScrollToPosition(index);
 				break;
 			}
 		}

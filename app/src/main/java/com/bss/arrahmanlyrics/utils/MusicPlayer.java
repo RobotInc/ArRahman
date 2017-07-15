@@ -256,30 +256,30 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 
 	public void next() {
 
-			int totalSongs = currentList.size();
-			if (totalSongs > 0 && songIndex < totalSongs - 1) {
-				Song song = currentList.get(songIndex + 1);
-				changeSong(song.getUlr(), song.getSongTitle());
-				ulrsIndex = ulrs.indexOf(song);
-				//songListFragment.setEq(ulrsIndex,oldPosition);
-				songIndex++;
-				Movie = song.getMovieTitle();
-				currentPlayingSong = song.getSongTitle();
-				//checkFavoriteItem(song.getSongTitle());
-				setLyricsManually(Movie, song.getSongTitle());
+		int totalSongs = currentList.size();
+		if (totalSongs > 0 && songIndex < totalSongs - 1) {
+			Song song = currentList.get(songIndex + 1);
+			changeSong(song.getUlr(), song.getSongTitle());
+			ulrsIndex = ulrs.indexOf(song);
+			//songListFragment.setEq(ulrsIndex,oldPosition);
+			songIndex++;
+			Movie = song.getMovieTitle();
+			currentPlayingSong = song.getSongTitle();
+			//checkFavoriteItem(song.getSongTitle());
+			setLyricsManually(Movie, song.getSongTitle());
 
-			} else if (songIndex == totalSongs - 1) {
+		} else if (songIndex == totalSongs - 1) {
 
-				Song song = currentList.get(0);
-				changeSong(song.getUlr(), song.getSongTitle());
-				ulrsIndex = ulrs.indexOf(song);
-				songIndex = 0;
-				Movie = song.getMovieTitle();
-				currentPlayingSong = song.getSongTitle();
-				//checkFavoriteItem(song.getSongTitle());
-				setLyricsManually(Movie, song.getSongTitle());
+			Song song = currentList.get(0);
+			changeSong(song.getUlr(), song.getSongTitle());
+			ulrsIndex = ulrs.indexOf(song);
+			songIndex = 0;
+			Movie = song.getMovieTitle();
+			currentPlayingSong = song.getSongTitle();
+			//checkFavoriteItem(song.getSongTitle());
+			setLyricsManually(Movie, song.getSongTitle());
 
-			}
+		}
 
 
 
