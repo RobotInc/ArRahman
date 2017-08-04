@@ -5,13 +5,14 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by mohan on 5/20/17.
  */
 
-public class Song implements Parcelable{
+public class Song implements Parcelable,Serializable{
     String MovieTitle;
     String songTitle;
     String lyricistNames;

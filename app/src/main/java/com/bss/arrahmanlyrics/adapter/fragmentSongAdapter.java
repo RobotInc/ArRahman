@@ -41,7 +41,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, lyricist, movietitle;
-     //   public EqualizerView eq;
+        public EqualizerView eq;
         ImageView dots;
 
 
@@ -53,7 +53,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
             name = (TextView) view.findViewById(R.id.Songtitle);
             lyricist = (TextView) view.findViewById(R.id.Songlyricist);
             movietitle = (TextView) view.findViewById(R.id.MovieTitle);
-            //eq = (EqualizerView) view.findViewById(R.id.equalizer_view);
+            eq = (EqualizerView) view.findViewById(R.id.equalizer_view);
             imageView = (CircularImageView) view.findViewById(R.id.songCover);
 
 
@@ -106,6 +106,13 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
                 showPopupMenu(holder.dots);
             }
         });*/
+    }
+    public void showPopupMenu (View view)
+    {
+        PopupMenu menu = new PopupMenu (mContext, view);
+
+        menu.inflate (R.menu.songlistmenu);
+        menu.show();
     }
 
 

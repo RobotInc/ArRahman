@@ -2,21 +2,17 @@ package com.bss.arrahmanlyrics.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bss.arrahmanlyrics.Fragments.songs;
 import com.bss.arrahmanlyrics.R;
-import com.bss.arrahmanlyrics.models.slideSong;
 import com.bss.arrahmanlyrics.models.songWithTitle;
 import com.bss.arrahmanlyrics.utils.FirstLetterUpperCase;
 import com.bumptech.glide.Glide;
@@ -25,20 +21,39 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.piruin.quickaction.ActionItem;
+import me.piruin.quickaction.QuickAction;
+
 /**
  * Created by mohan on 5/20/17.
  */
 
-public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSongAdapter.MyViewHolder> {
-	private View.OnClickListener mClickListener;
+public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSongAdapter.MyViewHolder>{
+	private QuickAction quickAction;
+	private QuickAction quickIntent;
 	private Context mContext;
 	private List<songWithTitle> songlist;
+	private songs s;
+
+	public mainFragmentSongAdapter(Context context, songs songs, List<songWithTitle> songlist) {
+		this.mContext = context;
+		this.songlist = songlist;
+		this.s = songs;
+		//QuickAction.setDefaultColor(ResourcesCompat.getColor(s.getResources(), R.color.white, null));
+		//QuickAction.setDefaultTextColor(Color.BLACK);
 
 
-	public class MyViewHolder extends RecyclerView.ViewHolder {
+
+
+
+	}
+
+
+	public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
 		public TextView name, lyricist, movietitle;
 		ImageView dots;
 		CircularImageView imageView;
+		LinearLayout layout;
 
 
 		public MyViewHolder(View view) {
@@ -46,20 +61,67 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 			name = (TextView) view.findViewById(R.id.MainSongtitle);
 			lyricist = (TextView) view.findViewById(R.id.MainSonglyricist);
 			movietitle = (TextView) view.findViewById(R.id.MainMovieTitle);
-			//dots = (ImageButton) view.findViewById(R.id.menu_button);
+			dots = (ImageButton) view.findViewById(R.id.menu_button);
 			imageView = (CircularImageView) view.findViewById(R.id.songCover);
+			layout = (LinearLayout) view.findViewById(R.id.songholder);
+			layout.setOnClickListener(this);
+			dots.setOnClickListener(this);
+
+
 
 
 			//albumCover = (ImageView) view.findViewById(R.id.album_artwork);
 		}
+
+		@Override
+		public void onClick(View v) {
+			final int id = v.getId();
+			quickAction = new QuickAction(v.getContext(), QuickAction.VERTICAL);
+			ActionItem play= new ActionItem(1,"Play",R.drawable.playicon);
+			ActionItem playAll= new ActionItem(2,"Play All",R.drawable.playall);
+			ActionItem queue= new ActionItem(3,"Add to Queue",R.drawable.queue);
+			ActionItem fav= new ActionItem(4,"Add to Favorite",R.drawable.favadd);
+			ActionItem favremove= new ActionItem(5,"Remove From Favorite",R.drawable.favremove);
+
+			//add action items into QuickAction
+			quickAction.addActionItem(play);
+			quickAction.addActionItem(playAll);
+			quickAction.addActionItem(queue);
+			quickAction.addActionItem(fav);
+			quickAction.addActionItem(favremove);
+
+
+			quickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
+				@Override
+				public void onItemClick(ActionItem item) {
+					if(item.getActionId()==1){
+						s.play(getmodel(movietitle.getText().toString(),name.getText().toString()));
+					}else if(item.getActionId()==2){
+						s.playAll(getmodel(movietitle.getText().toString(),name.getText().toString()));
+					}else if(item.getActionId()==3){
+						s.addToQueue(getmodel(movietitle.getText().toString(),name.getText().toString()));
+					}else if(item.getActionId()==4){
+						s.addToFavorite(getmodel(movietitle.getText().toString(),name.getText().toString()));
+					}else if(item.getActionId()==5){
+						s.removeFromFavorite(getmodel(movietitle.getText().toString(),name.getText().toString()));
+					}
+				}
+			});
+
+
+			if(R.id.menu_button == id){
+				quickAction.show(v);
+
+			}
+			if(R.id.songholder == id){
+				s.play(getmodel(movietitle.getText().toString(),name.getText().toString()));
+			}
+
+
+		}
 	}
 
-	public mainFragmentSongAdapter(Context mContext, List<songWithTitle> songlist) {
-		this.mContext = mContext;
-		this.songlist = songlist;
 
-
-	}
 
 	@Override
 	public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -88,19 +150,55 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 
 		//holder.lyricist.setText("Lyricist : " + actualsong.getLyricistNames());
 
+		/*holder.dots.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
 
-       /* holder.dots.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupMenu(holder.dots);
-            }
-        });*/
+				//creating a popup menu
+				PopupMenu popup = new PopupMenu(mContext, holder.dots);
+				//inflating menu from xml resource
+				popup.inflate(R.menu.songlistmenu);
+				//adding click listener
+				/*popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						switch (item.getItemId()) {
+							case R.id.menu1:
+								//handle menu1 click
+								break;
+							case R.id.menu2:
+								//handle menu2 click
+								break;
+							case R.id.menu3:
+								//handle menu3 click
+								break;
+						}
+						return false;
+					}
+				});
+				//displaying the popup
+				popup.show();
+
+			}
+		});*/
+
 	}
 
 
 	@Override
 	public int getItemCount() {
 		return songlist.size();
+	}
+
+	public songWithTitle getmodel(String movie,String songTitle){
+		movie = movie.replace("Movie: ","");
+		for(songWithTitle songwith:songlist){
+			if(songwith.getMovietitle().equalsIgnoreCase(movie)&&songwith.getSongTitle().equalsIgnoreCase(songTitle)){
+				return songwith;
+			}
+		}
+
+		return null;
 	}
 
 	public String FirstLetterUpperCase(String source) {
@@ -125,4 +223,6 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 		songlist.addAll(songlists);
 		notifyDataSetChanged();
 	}
+
+
 }

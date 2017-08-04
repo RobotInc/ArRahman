@@ -9,7 +9,7 @@
     <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
         android:id="@+id/songPlayList"
         android:layout_width="match_parent"
-
+        android:layout_marginBottom="?attr/actionBarSize"
         android:layout_height="match_parent"
         android:clickable="true"
         android:fadeScrollbars="true"

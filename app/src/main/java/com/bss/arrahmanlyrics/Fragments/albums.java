@@ -1,6 +1,8 @@
 package com.bss.arrahmanlyrics.Fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,11 +24,13 @@ import android.view.ViewGroup;
 
 import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.activites.MainActivity;
+import com.bss.arrahmanlyrics.activites.albumSongList;
 import com.bss.arrahmanlyrics.activites.lyricsActivity;
 import com.bss.arrahmanlyrics.adapter.albumAdapter;
 import com.bss.arrahmanlyrics.models.Album;
 import com.bss.arrahmanlyrics.models.Song;
 import com.bss.arrahmanlyrics.utils.RecyclerItemClickListener;
+import com.bss.arrahmanlyrics.utils.StorageUtil;
 import com.google.firebase.database.DatabaseReference;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
@@ -46,7 +50,7 @@ import java.util.TreeSet;
  * Use the {@link albums#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class albums extends Fragment implements SearchView.OnQueryTextListener {
+public class albums extends Fragment implements SearchView.OnQueryTextListener{
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -72,6 +76,7 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 	SearchView searchView;
 	Toolbar toolbar;
 	View rootView;
+
 
 	public albums() {
 		// Required empty public constructor
@@ -107,7 +112,7 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
+	                         final Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View rootView = inflater.inflate(R.layout.fragment_albums, container, false);
 		toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -129,9 +134,11 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 				//songs.putSerializable("map",(HashMap<String,Object>)values.get(selectedAlbum.getName()));
 				songs.putString("Title", selectedAlbum.getName());
 				songs.putString("selectedSong","");
+
 				//songs.putByteArray("image",albumList.get(position).getThumbnail());
+
 				try {
-					Intent intent = new Intent(getContext(), lyricsActivity.class);
+					Intent intent = new Intent(getContext(), albumSongList.class);
 					intent.putExtras(songs);
 					startActivity(intent);
 				} catch (Exception e) {
@@ -365,6 +372,8 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener {
 		super.onResume();
 
 	}
+
+
 
 
 }

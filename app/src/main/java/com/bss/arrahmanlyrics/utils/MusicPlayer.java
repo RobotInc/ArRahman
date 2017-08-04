@@ -172,9 +172,7 @@ public class MusicPlayer implements MediaPlayer.OnBufferingUpdateListener, Media
 			randomList.add(ulr.get(values));
 		}
 		currentList = randomList;
-		for (Song song : currentList) {
-			Log.i("songlist", song.getSongTitle());
-		}
+
 	}
 
 	public void setPlay(String name, String moiveName, SeekBar bar, TextView totalDur, Context presetContext, ImageView playButton, ImageView favorites, EnglishLyrics enLyrics, OtherLyrics oLyrics, songList songListFragment, ImageView cover) {

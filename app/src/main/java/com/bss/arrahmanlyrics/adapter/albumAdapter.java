@@ -61,7 +61,7 @@ public class albumAdapter extends RecyclerView.Adapter<albumAdapter.MyViewHolder
                 public void onGenerated(Palette palette) {
                     // Get the "vibrant" color swatch based on the bitmap
 
-                    if (palette.getVibrantSwatch() != null) {
+                   /* if (palette.getVibrantSwatch() != null) {
                         holder.backgroundColor.setBackgroundColor(palette.getVibrantSwatch().getRgb());
                         holder.title.setTextColor(palette.getVibrantSwatch().getTitleTextColor());
                         holder.count.setTextColor(palette.getVibrantSwatch().getBodyTextColor());
@@ -72,7 +72,8 @@ public class albumAdapter extends RecyclerView.Adapter<albumAdapter.MyViewHolder
                         holder.count.setTextColor(palette.getLightVibrantSwatch().getBodyTextColor());
                         //holder.count.setTextColor(palette.getMutedSwatch().getBodyTextColor());
 
-                    }else if (palette.getDarkVibrantSwatch() != null) {
+                    }else*/
+                   if (palette.getDarkVibrantSwatch() != null) {
                         holder.backgroundColor.setBackgroundColor(palette.getDarkVibrantSwatch().getRgb());
                         holder.title.setTextColor(palette.getDarkVibrantSwatch().getTitleTextColor());
                         holder.count.setTextColor(palette.getDarkVibrantSwatch().getBodyTextColor());

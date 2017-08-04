@@ -73,6 +73,7 @@ public class favoritesReadWrite {
 		if (Favorites != null) {
 			if (Favorites.containsKey(movieTitle)) {
 				if (Favorites.get(movieTitle).contains(songTitle)) {
+
 					return;
 				}
 			}
@@ -135,5 +136,49 @@ public class favoritesReadWrite {
 
 	}
 
+	public boolean addToFavorite(String movieTitle, String songTitle, FirebaseUser user) {
+		if (Favorites != null) {
+			if (Favorites.containsKey(movieTitle)) {
+				if (Favorites.get(movieTitle).contains(songTitle)) {
+
+					return false;
+				}
+			}
+		}
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put(songTitle, songTitle);
+		DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
+		userRef.child(user.getUid()).child("Fav Songs").child(movieTitle).updateChildren(map);
+		return  true;
+	}
+
+	public boolean removeFromFavorite(String movieTitle, String songTitle, FirebaseUser user) {
+		Log.e("removeFavorite", songTitle + " " + movieTitle);
+		if (Favorites != null) {
+			if (Favorites.containsKey(movieTitle)) {
+				if (Favorites.get(movieTitle).contains(songTitle)) {
+					HashMap<String, Object> map = new HashMap<>();
+					map.put(songTitle, songTitle);
+					DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
+					userRef.child(user.getUid()).child("Fav Songs").child(movieTitle).child(songTitle).removeValue(new DatabaseReference.CompletionListener() {
+
+						@Override
+						public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+						}
+					});
+					return true;
+				}else {
+					return false;
+				}
+			}else {
+				return false;
+			}
+		}else {
+			return false;
+		}
+
+	}
 
 }

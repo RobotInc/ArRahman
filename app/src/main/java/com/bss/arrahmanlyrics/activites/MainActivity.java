@@ -1,27 +1,23 @@
 package com.bss.arrahmanlyrics.activites;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +26,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +36,16 @@ import com.bss.arrahmanlyrics.Fragments.albums;
 import com.bss.arrahmanlyrics.Fragments.favorites;
 import com.bss.arrahmanlyrics.Fragments.songs;
 import com.bss.arrahmanlyrics.R;
-import com.bss.arrahmanlyrics.TutorialView.Arrow;
-import com.bss.arrahmanlyrics.TutorialView.TutorialView;
+import com.bss.arrahmanlyrics.models.Album;
+import com.bss.arrahmanlyrics.models.Song;
+import com.bss.arrahmanlyrics.utils.ArtworkUtils;
+import com.bss.arrahmanlyrics.utils.Helper;
+import com.bss.arrahmanlyrics.utils.MediaPlayerService;
+
+import com.bss.arrahmanlyrics.utils.StorageUtil;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.Auth;
@@ -63,19 +66,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.wang.avi.AVLoadingIndicatorView;
+import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
-		implements GoogleApiClient.OnConnectionFailedListener {
+		implements GoogleApiClient.OnConnectionFailedListener, MediaPlayerService.ServiceCallbacks, View.OnClickListener {
 	GoogleApiClient mGoogleApiClient;
 	private FirebaseAuth mFirebaseAuth;
 	private FirebaseAuth.AuthStateListener mAuthListener;
@@ -88,11 +87,25 @@ public class MainActivity extends AppCompatActivity
 	private ViewPager mViewPager;
 	ProgressDialog dialog;
 	public FirebaseUser user;
-	private AdView mAdView;
+	//-private AdView mAdView;
 	private InterstitialAd mInterstitialAd;
-
-
-
+	public MediaPlayerService player;
+	public boolean serviceBound = false;
+	ImageView smallplay,smallback,eqToggle;
+	TextView movietitle, songtitle;
+	SeekBar seekbar;
+	private Handler mHandler = new Handler();
+	Boolean isDetailSet = false;
+	public static final String Broadcast_PLAY_NEW_AUDIO = "com.bss.arrahmanlyrics.activites.PlayNewAudio";
+	public static final String Broadcast_NEW_ALBUM = "com.bss.arrahmanlyrics.activites.PlayNewAlbum";
+	public static final String Broadcast_PLAY = "com.bss.arrahmanlyrics.activites.Play";
+	public static final String Broadcast_PAUSE = "com.bss.arrahmanlyrics.activites.Pause";
+	public static final String Broadcast_NEXT = "com.bss.arrahmanlyrics.activites.Next";
+	public static final String Broadcast_Prev = "com.bss.arrahmanlyrics.activites.Previous";
+	public static final String Broadcast_Shuffle = "com.bss.arrahmanlyrics.activites.Shuffle";
+	public static final String Broadcast_UnShuffle = "com.bss.arrahmanlyrics.activites.UnShuffle";
+	public static final String Broadcast_EQTOGGLE= "com.bss.arrahmanlyrics.activites.eqToggle";
+	LinearLayout layout;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,6 +113,17 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+		smallplay = (ImageView) findViewById(R.id.small_toggle);
+
+		smallback = (ImageView) findViewById(R.id.img_bottom_slideone);
+		movietitle = (TextView) findViewById(R.id.small_title);
+		songtitle = (TextView) findViewById(R.id.small_song);
+
+
+		smallplay.setOnClickListener(this);
+
+
+		seekbar = (SeekBar) findViewById(R.id.small_seekbar);
 
 
 		mFirebaseAuth = FirebaseAuth.getInstance();
@@ -120,13 +144,13 @@ public class MainActivity extends AppCompatActivity
 
 		user = mFirebaseAuth.getCurrentUser();
 
-	//	do{
-			if (user != null) {
-				initUI();
-			} else {
+		//	do{
+		if (user != null) {
+			initUI();
+		} else {
 
-				signIn();
-			}
+			signIn();
+		}
 		//}while (!loginSuccess);
 
 
@@ -167,7 +191,7 @@ public class MainActivity extends AppCompatActivity
 				Log.i("Ads", "onAdClosed");
 			}
 		});
-		mAdView = (AdView) findViewById(R.id.adView);
+		/*mAdView = (AdView) findViewById(R.id.adView);
 		AdRequest adRequest = new AdRequest.Builder()
 				.build();
 		mAdView.loadAd(adRequest);
@@ -203,8 +227,45 @@ public class MainActivity extends AppCompatActivity
 				// to the app after tapping on an ad.
 				Log.i("Ads", "onAdClosed");
 			}
+		});*/
+		layout = (LinearLayout) findViewById(R.id.smallview);
+		layout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//Song selectedAlbum = filtered.get(position);
+				Bundle songs = new Bundle();
+				songs.putParcelableArrayList("list", new StorageUtil(getApplicationContext()).loadAudio());
+				//songs.putSerializable("map",(HashMap<String,Object>)values.get(selectedAlbum.getName()));
+				//songs.putString("Title", selectedAlbum.getName());
+				//songs.putString("selectedSong","");
+
+				//songs.putByteArray("image",albumList.get(position).getThumbnail());
+
+				try {
+					Intent intent = new Intent(getApplicationContext(), lyricsActivity.class);
+					intent.putExtras(songs);
+					startActivity(intent);
+				} catch (Exception e) {
+					Log.i("Exception", e.getMessage());
+				}
+			}
 		});
+		mHandler.post(runnable);
+
 	}
+
+	private Runnable runnable = new Runnable() {
+		@Override
+		public void run() {
+			if (player != null && player.isPlaying()) {
+				int position = player.getCurrrentDuration();
+				seekbar.setProgress(position);
+				setDetails();
+
+			}
+			mHandler.postDelayed(runnable, 1000);
+		}
+	};
 
 
 	@Override
@@ -213,7 +274,7 @@ public class MainActivity extends AppCompatActivity
 		getWindow().closeAllPanels();
 		AlertDialog.Builder builder;
 
-			builder = new AlertDialog.Builder(MainActivity.this);
+		builder = new AlertDialog.Builder(MainActivity.this);
 
 		builder.setTitle("Thank You");
 		builder.setMessage("Thank You For Using Our Application Please Give Us Your Suggestions and Feedback ");
@@ -238,8 +299,6 @@ public class MainActivity extends AppCompatActivity
 
 		builder.show();
 	}
-
-
 
 
 	@Override
@@ -296,7 +355,7 @@ public class MainActivity extends AppCompatActivity
 						// If sign in fails, display a message to the user. If sign in succeeds
 						// the auth state listener will be notified and logic to handle the
 						// signed in user can be handled in the listener.
-						if(task.isSuccessful()){
+						if (task.isSuccessful()) {
 							user = mFirebaseAuth.getCurrentUser();
 							initUI();
 
@@ -305,13 +364,54 @@ public class MainActivity extends AppCompatActivity
 						//userEmailId.setText(user.getEmail());
 						if (!task.isSuccessful()) {
 							Log.w("Sign in", "signInWithCredential", task.getException());
-														signinTry();
+							signinTry();
 						}
 						// ...
 					}
 				});
 	}
 
+	@Override
+	public void updateUi() {
+		Log.i("callback","called update ui");
+		if (player != null) {
+			if (player.isPlaying()) {
+
+				seekbar.setMax(player.getDuration());
+				Song song = player.getActiveAudio();
+				songtitle.setText(song.getSongTitle());
+				movietitle.setText(song.getMovieTitle());
+				smallplay.setImageResource(android.R.drawable.ic_media_pause);
+				setBackground(song);
+
+
+			}
+		}
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch (id) {
+			case R.id.small_toggle: {
+				if (player == null) return;
+				if (player.isPlaying()) {
+					Intent pause = new Intent(Broadcast_PAUSE);
+					sendBroadcast(pause);
+					smallplay.setImageResource(android.R.drawable.ic_media_play);
+				} else {
+					Intent playsong = new Intent(Broadcast_PLAY);
+					sendBroadcast(playsong);
+					smallplay.setImageResource(android.R.drawable.ic_media_pause);
+				}
+				break;
+			}
+
+
+		}
+
+	}
 
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -352,6 +452,25 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public void onStart() {
 		super.onStart();
+		Log.i("testing", "am in start");
+		isDetailSet = false;
+		if (!serviceBound) {
+			Intent playerIntent = new Intent(this, MediaPlayerService.class);
+			startService(playerIntent);
+			bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+			Log.i("bounded", "service bounded");
+
+
+		}
+
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i("testing", "am in resume");
+		isDetailSet = false;
 
 
 	}
@@ -359,6 +478,19 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	protected void onStop() {
 		super.onStop();
+		Log.i("testing", "am in stop");
+		if (serviceBound) {
+			unbindService(serviceConnection);
+			serviceBound = false;
+			//player.setCallbacks(null);
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.i("testing", "am in pause");
+
 	}
 
 	public HashMap<String, Object> getValues() {
@@ -369,48 +501,82 @@ public class MainActivity extends AppCompatActivity
 	protected void onDestroy() {
 		super.onDestroy();
 		dialog.dismiss();
+		if (serviceBound) {
+			unbindService(serviceConnection);
+			player.setCallbacks(null);
+			//service is active
+			//player.stopSelf();
+
+		}
+
 	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+		super.onSaveInstanceState(outState, outPersistentState);
+		outState.putBoolean("serviceStatus", serviceBound);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		serviceBound = savedInstanceState.getBoolean("serviceStatus");
+	}
+
+	//Binding this Client to the AudioPlayer Service
+	private ServiceConnection serviceConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get LocalService instance
+			MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
+			player = binder.getService();
+			serviceBound = true;
+			player.setCallbacks(MainActivity.this);
+			setDetails();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			serviceBound = false;
+		}
+	};
+
+	private void setDetails() {
+		if (player != null) {
+			if (player.isPlaying()) {
+				if(!isDetailSet){
+					seekbar.setMax(player.getDuration());
+					Song song = player.getActiveAudio();
+					songtitle.setText(song.getSongTitle());
+					movietitle.setText(song.getMovieTitle());
+					smallplay.setImageResource(android.R.drawable.ic_media_pause);
+					setBackground(song);
+					isDetailSet = true;
+					Log.i("CalledSet","called set details");
+
+				}
+
+
+			}
+		}
+	}
+
 
 	void initUI() {
 
 		dialog = new ProgressDialog(this);
 		dialog.setMessage("Loading Database");
 		dialog.show();
-		data = FirebaseDatabase.getInstance().getReference();
-		data.child("AR Rahman").child("Tamil").addValueEventListener(new ValueEventListener() {
+		data = FirebaseDatabase.getInstance().getReference().child("AR Rahman").child("Tamil");
+		data.keepSynced(true);
+		data.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				values = (HashMap<String, Object>) dataSnapshot.getValue();
 				mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 				mViewPager = (ViewPager) findViewById(R.id.container);
 				mViewPager.setOffscreenPageLimit(2);
-				mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-					@Override
-					public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-						if (position == 2) {
-							if (mInterstitialAd.isLoaded()) {
-								mInterstitialAd.show();
-							} else {
-								Log.d("TAG", "The interstitial wasn't loaded yet.");
-							}
-						}
-					}
 
-					@Override
-					public void onPageSelected(int position) {
-						if(position == 2){
-							mAdView.setVisibility(View.VISIBLE);
-						}else {
-							mAdView.setVisibility(View.INVISIBLE);
-						}
-
-					}
-
-					@Override
-					public void onPageScrollStateChanged(int state) {
-
-					}
-				});
 				mSectionsPagerAdapter.addFragment(new albums(), "Albums");
 				mSectionsPagerAdapter.addFragment(new songs(), "Songs");
 				mSectionsPagerAdapter.addFragment(new favorites(), "Favorite Songs");
@@ -433,7 +599,8 @@ public class MainActivity extends AppCompatActivity
 
 
 	}
-	public void signinTry(){
+
+	public void signinTry() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
 		builder.setTitle("Error While Connecting");
@@ -471,7 +638,7 @@ public class MainActivity extends AppCompatActivity
 				startActivity(intent);
 				return true;*/
 			case R.id.about:
-				Intent aboutPage = new Intent(getApplicationContext(),about.class);
+				Intent aboutPage = new Intent(getApplicationContext(), about.class);
 				startActivity(aboutPage);
 				return true;
 
@@ -482,7 +649,24 @@ public class MainActivity extends AppCompatActivity
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu,menu);
+		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
+	}
+
+	public void setBackground(Song song) {
+		HashMap<String, Object> movie = (HashMap<String, Object>) values.get(song.getMovieTitle());
+
+
+
+
+			Bitmap bitmap = Helper.getBitmap(String.valueOf(movie.get("IMAGE")));
+			smallback.setImageBitmap(bitmap);
+
+
+	}
+
+	public void setIsDetailSet(Boolean value){
+		isDetailSet = value;
+
 	}
 }

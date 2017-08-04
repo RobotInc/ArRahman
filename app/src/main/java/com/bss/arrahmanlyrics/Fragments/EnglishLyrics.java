@@ -42,7 +42,7 @@ public class EnglishLyrics extends Fragment {
     HashMap<String, Object> selectedSong;
     public TextView lyricsText;
     public TextView lyricsText2;
-    TextView song_title, album_title;
+
     DatabaseReference ref;
     private AdView mAdView;
 
@@ -94,8 +94,7 @@ public class EnglishLyrics extends Fragment {
         View view = inflater.inflate(R.layout.fragment_english_lyrics, container, false);
         lyricsText = (TextView) view.findViewById(R.id.lyricsEnglish);
         lyricsText2 = (TextView) view.findViewById(R.id.lyricsEnglish2);
-        song_title = (TextView) getActivity().findViewById(R.id.song_title);
-        album_title = (TextView) getActivity().findViewById(R.id.album_title);
+
        // song_title.setText(getActivity().getIntent().getExtras().getString("selectedSong"));
        // album_title.setText(getActivity().getIntent().getExtras().getString("Title"));
 

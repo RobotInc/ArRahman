@@ -13,7 +13,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:custom="http://schemas.android.com/tools"
               android:id="@+id/item_view"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
@@ -26,16 +25,21 @@
               android:paddingTop="10dp">
 
 
-    <com.mikhaellopez.circularimageview.CircularImageView
+    <RelativeLayout
         android:layout_width="65dp"
-        android:id="@+id/songCover"
-        android:layout_height="65dp"
-        android:src="@drawable/ic_launcher"
-        app:civ_border_color="#ffffff"
-        app:civ_border_width="2dp"
-        app:civ_shadow="true"
-        app:civ_shadow_radius="2"
-        app:civ_shadow_color="#8BC34A"/>
+        android:id="@+id/favsongCover"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_launcher">
+        <com.bss.arrahmanlyrics.utils.digitalText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#a000ffae"
+            android:textSize="20sp"
+            android:id="@+id/trackNo"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,30 +50,20 @@
         android:orientation="vertical">
 
         <com.bss.arrahmanlyrics.utils.lyricsTextView
-            android:id="@+id/Songtitle"
+            android:id="@+id/favSongtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:maxLines="1"
             android:text="SONG TITLE"
             android:textColor="#ffffff"
             android:textSize="16sp"/>
+
         <com.bss.arrahmanlyrics.utils.lyricsTextView
-            android:id="@+id/MovieTitle"
+            android:id="@+id/favSonglyricist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingTop="4dp"
-            android:text="Movie Title"
-            android:textColor="#a000ffae"
-            android:textSize="14sp"/>
-        <com.bss.arrahmanlyrics.utils.lyricsTextView
-            android:id="@+id/Songlyricist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
+            android:alpha="0.8"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingTop="4dp"
@@ -78,12 +72,14 @@
             android:textSize="14sp"/>
 
     </LinearLayout>
-    <es.claucookie.miniequalizerlibrary.EqualizerView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/equalizer_view"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:visibility="invisible"
-        custom:foregroundColor="@android:color/holo_orange_light"/>
+   <!-- <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@null"
+        android:id="@+id/eq"
+        android:backgroundTintMode="src_in"
+        android:tint="@null"
+        />-->
+
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.bss.arrahmanlyrics.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bss.arrahmanlyrics.R;
+import com.bss.arrahmanlyrics.activites.MainActivity;
 import com.bss.arrahmanlyrics.activites.lyricsActivity;
 import com.bss.arrahmanlyrics.adapter.fragmentSongAdapter;
 import com.bss.arrahmanlyrics.mainApp;
@@ -36,6 +38,7 @@ import com.bss.arrahmanlyrics.utils.CustomLayoutManager;
 import com.bss.arrahmanlyrics.utils.DividerItemDecoration;
 import com.bss.arrahmanlyrics.utils.RecyclerItemClickListener;
 import com.bss.arrahmanlyrics.utils.SimpleDividerItemDecoration;
+import com.bss.arrahmanlyrics.utils.StorageUtil;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,8 +55,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
 import es.claucookie.miniequalizerlibrary.EqualizerView;
+
+//import static com.bss.arrahmanlyrics.activites.MainActivity.Broadcast_PLAY_NEW_AUDIO;
 
 
 /**
@@ -64,7 +70,7 @@ import es.claucookie.miniequalizerlibrary.EqualizerView;
  * Use the {@link songList#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class songList extends Fragment implements SearchView.OnQueryTextListener{
+public class songList extends Fragment implements SearchView.OnQueryTextListener {
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -79,11 +85,17 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 	List<songWithTitle> songsListArray;
 	List<songWithTitle> filtered;
 	lyricsActivity activity;
+	boolean playListSet = false;
 	SearchView searchView;
 	HashMap<String, Object> values;
 	DatabaseReference songref;
-
+	OnSongSelectedListener mCallback;
+	int presentpos = 0;
 	private OnFragmentInteractionListener mListener;
+
+	public interface OnSongSelectedListener {
+		public void onSongSelected(int position);
+	}
 
 	public songList() {
 		// Required empty public constructor
@@ -126,7 +138,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		setHasOptionsMenu(true);
 		songlistView = (FastScrollRecyclerView) rootview.findViewById(R.id.albumPlayList);
 		passedList = getActivity().getIntent().getExtras().getParcelableArrayList("list");
-
+		playListSet = false;
 		songsListArray = new ArrayList<>();
 		adapter = new fragmentSongAdapter(getContext(), songsListArray);
 		songlistView.setAdapter(adapter);
@@ -140,7 +152,46 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 			public void onItemClick(View view, int position) {
 				songWithTitle song = filtered.get(position);
 
-				mainApp.getPlayer().setPlay(song.getSongTitle());
+				int index = 0;
+				for (Song songs : passedList) {
+					if (songs.getMovieTitle().equalsIgnoreCase(song.getMovietitle()) && songs.getSongTitle().equalsIgnoreCase(song.getSongTitle())) {
+						index = passedList.indexOf(songs);
+					}
+				}
+				/*StorageUtil storage = new StorageUtil(getContext());
+				storage.storeAudioIndex(index);*/
+				/*try {
+					EqualizerView eqold = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(presentpos).itemView).findViewById(R.id.equalizer_view);
+
+					eqold.setVisibility(View.INVISIBLE);
+					eqold.stopBars();
+					Toast.makeText(getContext(), "new position: " + index+ " old position : " + presentpos + " adapter size : " + adapter.getItemCount(), Toast.LENGTH_LONG).show();
+					EqualizerView eqnew = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(index).itemView).findViewById(R.id.equalizer_view);
+
+					eqnew.setVisibility(View.VISIBLE);
+					eqnew.animateBars();
+					presentpos = index;
+				} catch (Exception e) {
+					Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+				}*/
+				if (!playListSet) {
+					StorageUtil storageUtil = new StorageUtil(getContext());
+					storageUtil.storeAudio((ArrayList<Song>) passedList);
+					storageUtil.storeAudioIndex(0);
+					Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+					getActivity().sendBroadcast(setplaylist);
+					playListSet = true;
+				}
+				mCallback.onSongSelected(index);
+
+				Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
+				getActivity().sendBroadcast(broadcastIntent);
+				((lyricsActivity)getActivity()).setisSetDetails(false);
+				//Service is active
+				//Send a broadcast to the service -> PLAY_NEW_AUDIO
+
+				//			((lyricsActivity)getActivity()).bar.setMax((((lyricsActivity) getActivity()).player.getDuration()));
+
 				//mainApp.getPlayer().setLyricsManually(getActivity().getIntent().getExtras().getString("Title"), song.getSongTitle());
 			}
 		}));
@@ -217,7 +268,6 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 	}
 
 
-
 	/**
 	 * This interface must be implemented by activities that contain this
 	 * fragment to allow an interaction in this fragment to be communicated
@@ -290,23 +340,21 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		}
 		return filteralbumlist;
 	}
-/*
-	public void setEq(int newPosition,int OldPosition){
+
+
+
+
+
+
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
 		try {
-			/*EqualizerView eqold = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(OldPosition).itemView).findViewById      (R.id.equalizer_view);
-
-			eqold.setVisibility(View.INVISIBLE);
-			Toast.makeText(getContext(),"new position: "+newPosition+" old position : "+OldPosition+" adapter size : "+adapter.getItemCount(),Toast.LENGTH_LONG).show();
-			EqualizerView eqnew = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(newPosition).itemView).findViewById      (R.id.equalizer_view);
-
-			eqnew.setVisibility(View.VISIBLE);
-		}catch (Exception e){
-			Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+			mCallback = (OnSongSelectedListener) context;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(context.toString()
+					+ " must implement OnHeadlineSelectedListener");
 		}
-
-
-
-
-	}*/
-
+	}
 }

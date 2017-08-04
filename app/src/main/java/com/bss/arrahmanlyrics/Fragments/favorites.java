@@ -55,305 +55,304 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class favorites extends Fragment implements SearchView.OnQueryTextListener {
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
-	private static final String ARG_PARAM2 = "param2";
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
-	private OnFragmentInteractionListener mListener;
-	FastScrollRecyclerView songlistView;
-	List<songWithTitle> songlist;
+    private OnFragmentInteractionListener mListener;
+    FastScrollRecyclerView songlistView;
+    List<songWithTitle> songlist;
 
-	List<songWithTitle> filtered;
-	ArrayList<Song> favoriteList;
-	HashMap<String, ArrayList<String>> favorites;
-	HashMap<String, Object> values;
-	DatabaseReference songref;
-	favoriteFragmentSongAdapter adapter;
-	ProgressDialog dialog;
-	SearchView searchView;
+    List<songWithTitle> filtered;
+    ArrayList<Song> favoriteList;
+    HashMap<String, ArrayList<String>> favorites;
+    HashMap<String, Object> values;
+    DatabaseReference songref;
+    favoriteFragmentSongAdapter adapter;
+    ProgressDialog dialog;
+    SearchView searchView;
 
-	View view;
+    View view;
 
-	public favorites() {
-		// Required empty public constructor
-	}
+    public favorites() {
+        // Required empty public constructor
+    }
 
-	/**
-	 * Use this factory method to create a new instance of
-	 * this fragment using the provided parameters.
-	 *
-	 * @param param1 Parameter 1.
-	 * @param param2 Parameter 2.
-	 * @return A new instance of fragment favorites.
-	 */
-	// TODO: Rename and change types and number of parameters
-	public static favorites newInstance(String param1, String param2) {
-		favorites fragment = new favorites();
-		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
-		fragment.setArguments(args);
-		return fragment;
-	}
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment favorites.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static favorites newInstance(String param1, String param2) {
+        favorites fragment = new favorites();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
-		}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
 
-		setHasOptionsMenu(true);
-
-
-
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_favorites, container, false);
-
-		songlist = new ArrayList<>();
-
-		filtered = new ArrayList<>();
-		values = ((MainActivity)getActivity()).getValues();
-		favorites = new HashMap<>();
-		favoriteList = new ArrayList<>();
-		adapter = new favoriteFragmentSongAdapter(getContext(), songlist);
-		songlistView = (FastScrollRecyclerView) view.findViewById(R.id.favoriteSongPlayList);
-		songlistView.setAdapter(adapter);
-		final CustomLayoutManager customLayoutManager = new CustomLayoutManager(getContext());
-		customLayoutManager.setSmoothScrollbarEnabled(true);
-		songlistView.setLayoutManager(customLayoutManager);
-
-		songlistView.addItemDecoration(new DividerItemDecoration(getContext(), 75, true));
-		songlistView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-				songWithTitle song = filtered.get(position);
-				Bundle bundle = new Bundle();
-				bundle.putParcelableArrayList("list", favoriteList);
-				bundle.putString("selectedSong", song.getSongTitle());
-				bundle.putString("Title", song.getMovietitle());
-				//bundle.putString("trackNo",song.getTrackNo());
-				Toast.makeText(getContext(), song.getMovietitle(), Toast.LENGTH_SHORT).show();
-				Intent i = new Intent(getContext(), lyricsActivity.class);
+        setHasOptionsMenu(true);
 
 
-				i.putExtras(bundle);
-				startActivity(i);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_favorites, container, false);
+
+        songlist = new ArrayList<>();
+
+        filtered = new ArrayList<>();
+        values = ((MainActivity) getActivity()).getValues();
+        favorites = new HashMap<>();
+        favoriteList = new ArrayList<>();
+        adapter = new favoriteFragmentSongAdapter(getContext(), songlist);
+        songlistView = (FastScrollRecyclerView) view.findViewById(R.id.favoriteSongPlayList);
+        songlistView.setAdapter(adapter);
+        final CustomLayoutManager customLayoutManager = new CustomLayoutManager(getContext());
+        customLayoutManager.setSmoothScrollbarEnabled(true);
+        songlistView.setLayoutManager(customLayoutManager);
+
+        songlistView.addItemDecoration(new DividerItemDecoration(getContext(), 75, true));
+        songlistView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                songWithTitle song = filtered.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("list", favoriteList);
+                bundle.putString("selectedSong", song.getSongTitle());
+                bundle.putString("Title", song.getMovietitle());
+                //bundle.putString("trackNo",song.getTrackNo());
+                Toast.makeText(getContext(), song.getMovietitle(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getContext(), lyricsActivity.class);
 
 
-			}
-		}));
-		DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
-		userRef.keepSynced(true);
-		userRef.child(((MainActivity)getActivity()).user.getUid()).addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-				if(dataSnapshot.exists()){
-
-					HashMap<String,Object> fav = (HashMap<String, Object>) dataSnapshot.getValue();
-					HashMap<String,Object> movies = (HashMap<String, Object>) fav.get("Fav Songs");
-					ArrayList<String> Favsonglist = new ArrayList<String>();
-					favorites.clear();
-					if (movies != null) {
-						for (String movie : movies.keySet()) {
-
-							HashMap<String, Object> songs = (HashMap<String, Object>) movies.get(movie);
-
-							Favsonglist.clear();
-							for (String song : songs.keySet()) {
-
-								Favsonglist.add(song);
-							}
-
-							favorites.put(movie, (ArrayList<String>) Favsonglist.clone());
-						}
-
-						mainApp.getSp().setFavorites(favorites);
-						songlist.clear();
-						favoriteList.clear();
-						filtered.clear();
-
-						prepareSongList();
-
-					}
-				}else {
-					songlist.clear();
-					favoriteList.clear();
-					adapter.notifyDataSetChanged();
-				}
-			}
-
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-
-			}
-		});
+                i.putExtras(bundle);
+                startActivity(i);
 
 
-		adapter.notifyDataSetChanged();
+            }
+        }));
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
+        userRef.keepSynced(true);
+        userRef.child(((MainActivity) getActivity()).user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
 
-		return view;
+                    HashMap<String, Object> fav = (HashMap<String, Object>) dataSnapshot.getValue();
+                    HashMap<String, Object> movies = (HashMap<String, Object>) fav.get("Fav Songs");
+                    ArrayList<String> Favsonglist = new ArrayList<String>();
+                    favorites.clear();
+                    if (movies != null) {
+                        for (String movie : movies.keySet()) {
 
-	}
+                            HashMap<String, Object> songs = (HashMap<String, Object>) movies.get(movie);
 
+                            Favsonglist.clear();
+                            for (String song : songs.keySet()) {
 
+                                Favsonglist.add(song);
+                            }
 
-	private void prepareSongList() {
-		if(favoriteList !=null){
-			favoriteList.clear();
-		}
+                            favorites.put(movie, (ArrayList<String>) Favsonglist.clone());
+                        }
 
+                        mainApp.getSp().setFavorites(favorites);
+                        songlist.clear();
+                        favoriteList.clear();
+                        filtered.clear();
 
-		if (favorites != null) {
-			for (String movies : favorites.keySet()) {
+                        prepareSongList();
 
-				HashMap<String, Object> movieMap = (HashMap<String, Object>) values.get(movies);
-				ArrayList<String> favoriteSongs = favorites.get(movies);
+                    }
+                } else {
+                    songlist.clear();
+                    favoriteList.clear();
+                    adapter.notifyDataSetChanged();
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-				for (String song : favoriteSongs) {
-					HashMap<String, Object> songMap = (HashMap<String, Object>) movieMap.get(song);
-
-					Song songModel = new Song(movies, song, String.valueOf(songMap.get("Lyricist")), String.valueOf(songMap.get("Download")));
-					favoriteList.add(songModel);
-				}
-			}
-		}
-		songlist.clear();
-		if (favoriteList != null) {
-			for (Song song : favoriteList) {
-				String moive = song.getMovieTitle();
-				String title = song.getSongTitle();
-				HashMap<String, Object> movieMap = (HashMap<String, Object>) values.get(moive);
-				HashMap<String, Object> songMap = (HashMap<String, Object>) movieMap.get(title);
-				songWithTitle songwith = new songWithTitle(moive, title, String.valueOf(songMap.get("Lyricist")), getImage(String.valueOf(movieMap.get("IMAGE"))), song.getUlr());
-				songlist.add(songwith);
-
-			}
-		} else {
-			Log.e("fav null", String.valueOf(favoriteList));
-		}
-
-		filtered = songlist;
-		adapter.notifyDataSetChanged();
-	}
-
-	// TODO: Rename method, update argument and hook method into UI event
-	public void onButtonPressed(Uri uri) {
-		if (mListener != null) {
-			mListener.onFragmentInteraction(uri);
-		}
-	}
+            }
+        });
 
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
+        adapter.notifyDataSetChanged();
 
-	@Override
-	public boolean onQueryTextSubmit(String query) {
-		return false;
-	}
+        return view;
 
-	@Override
-	public boolean onQueryTextChange(String newText) {
-		filtered = new ArrayList<>();
-		filtered = filterAlbum(songlist, newText);
-		if (TextUtils.isEmpty(newText)) {
-			adapter.setFilter(songlist);
-		} else {
-			adapter.setFilter(filtered);
-		}
-
-		return true;
-	}
-
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html"
-	 * >Communicating with Other Fragments</a> for more information.
-	 */
-	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
-		void onFragmentInteraction(Uri uri);
-	}
-
-	private byte[] getImage(String imageString) {
-		if (imageString.equals(null)) {
-			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-			byte[] bitMapData = stream.toByteArray();
-			return bitMapData;
-
-		}
-		byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
-		//Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-		return decodedString;
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.favoritesongmenu, menu);
-		searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.fav_song_search));
-		searchView.setOnQueryTextListener(this);
-		searchView.setQueryHint("Search songs");
-
-	}
-
-	public List<songWithTitle> filterAlbum(List<songWithTitle> listsongs, String query) {
-		query = query.toLowerCase();
-		final List<songWithTitle> filteralbumlist = new ArrayList<>();
-		for (songWithTitle songs : listsongs) {
-			final String text1 = songs.getSongTitle().toLowerCase();
-			final String text2 = songs.getMovietitle().toLowerCase();
-			final String text3 = songs.getLyricistName().toLowerCase();
-			if (text1.contains(query) || text2.contains(query) || text3.contains(query)) {
-				filteralbumlist.add(songs);
-			}
-		}
-		return filteralbumlist;
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		//dialog.dismiss();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
+    }
 
 
+    private void prepareSongList() {
+        if (favoriteList != null) {
+            favoriteList.clear();
+        }
 
-	}
-	public void Toast(String message){
-		Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
-	}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			/*case R.id.feedback:
+
+        if (favorites != null) {
+            for (String movies : favorites.keySet()) {
+
+                HashMap<String, Object> movieMap = (HashMap<String, Object>) values.get(movies);
+                ArrayList<String> favoriteSongs = favorites.get(movies);
+
+
+                for (String song : favoriteSongs) {
+                    HashMap<String, Object> songMap = (HashMap<String, Object>) movieMap.get(song);
+
+                    Song songModel = new Song(movies, song, String.valueOf(songMap.get("Lyricist")), String.valueOf(songMap.get("Download")));
+                    favoriteList.add(songModel);
+                }
+            }
+        }
+        songlist.clear();
+        if (favoriteList != null) {
+            for (Song song : favoriteList) {
+                String moive = song.getMovieTitle();
+                String title = song.getSongTitle();
+                HashMap<String, Object> movieMap = (HashMap<String, Object>) values.get(moive);
+                HashMap<String, Object> songMap = (HashMap<String, Object>) movieMap.get(title);
+                songWithTitle songwith = new songWithTitle(moive, title, String.valueOf(songMap.get("Lyricist")), getImage(String.valueOf(movieMap.get("IMAGE"))), song.getUlr());
+                songlist.add(songwith);
+
+            }
+        } else {
+            Log.e("fav null", String.valueOf(favoriteList));
+        }
+
+        filtered = songlist;
+        adapter.notifyDataSetChanged();
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filtered = new ArrayList<>();
+        filtered = filterAlbum(songlist, newText);
+        if (TextUtils.isEmpty(newText)) {
+            adapter.setFilter(songlist);
+        } else {
+            adapter.setFilter(filtered);
+        }
+
+        return true;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
+    private byte[] getImage(String imageString) {
+        if (imageString.equals(null)) {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] bitMapData = stream.toByteArray();
+            return bitMapData;
+
+        }
+        byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
+        //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedString;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.favoritesongmenu, menu);
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.fav_song_search));
+        searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint("Search songs");
+
+    }
+
+    public List<songWithTitle> filterAlbum(List<songWithTitle> listsongs, String query) {
+        query = query.toLowerCase();
+        final List<songWithTitle> filteralbumlist = new ArrayList<>();
+        for (songWithTitle songs : listsongs) {
+            final String text1 = songs.getSongTitle().toLowerCase();
+            final String text2 = songs.getMovietitle().toLowerCase();
+            final String text3 = songs.getLyricistName().toLowerCase();
+            if (text1.contains(query) || text2.contains(query) || text3.contains(query)) {
+                filteralbumlist.add(songs);
+            }
+        }
+        return filteralbumlist;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //dialog.dismiss();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
+
+    public void Toast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            /*case R.id.feedback:
 				Intent intent = new Intent(getContext(), feedback.class);
 				startActivity(intent);
 				return true;*/
@@ -364,9 +363,13 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 				builder.setPositiveButton(R.string.ok, null);
 				builder.show();
 				return true;*/
-			default:
-				return super.onOptionsItemSelected(item);
-		}
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
-	}
+    }
+
+
 }
+
+
