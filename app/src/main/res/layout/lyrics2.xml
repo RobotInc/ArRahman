@@ -48,19 +48,7 @@
 
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/album_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:ellipsize="marquee"
-                        android:maxLines="1"
-                        android:paddingEnd="4dp"
-                        android:paddingStart="10dp"
-                        android:text=""
-                        android:textColor="#a000ffae"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
+
 
                     <TextView
                         android:id="@+id/song_title"
@@ -75,6 +63,19 @@
                         android:text=""
                         android:textColor="@android:color/holo_orange_light"
                         android:textSize="14sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/album_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="marquee"
+                        android:maxLines="1"
+                        android:paddingEnd="4dp"
+                        android:paddingStart="10dp"
+                        android:text=""
+                        android:textColor="#a000ffae"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
 
 

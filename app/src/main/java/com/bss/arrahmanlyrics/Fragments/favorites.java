@@ -31,9 +31,12 @@ import com.bss.arrahmanlyrics.models.songWithTitle;
 import com.bss.arrahmanlyrics.utils.CustomLayoutManager;
 import com.bss.arrahmanlyrics.utils.DividerItemDecoration;
 import com.bss.arrahmanlyrics.utils.RecyclerItemClickListener;
+import com.bss.arrahmanlyrics.utils.StorageUtil;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,6 +80,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
     ProgressDialog dialog;
     SearchView searchView;
 
+    boolean playListSet = false;
     View view;
 
     public favorites() {
@@ -126,7 +130,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
         values = ((MainActivity) getActivity()).getValues();
         favorites = new HashMap<>();
         favoriteList = new ArrayList<>();
-        adapter = new favoriteFragmentSongAdapter(getContext(), songlist);
+        adapter = new favoriteFragmentSongAdapter(getContext(), songlist, com.bss.arrahmanlyrics.Fragments.favorites.this);
         songlistView = (FastScrollRecyclerView) view.findViewById(R.id.favoriteSongPlayList);
         songlistView.setAdapter(adapter);
         final CustomLayoutManager customLayoutManager = new CustomLayoutManager(getContext());
@@ -134,7 +138,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
         songlistView.setLayoutManager(customLayoutManager);
 
         songlistView.addItemDecoration(new DividerItemDecoration(getContext(), 75, true));
-        songlistView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+        /*songlistView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 songWithTitle song = filtered.get(position);
@@ -152,7 +156,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 
 
             }
-        }));
+        }));*/
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
         userRef.keepSynced(true);
         userRef.child(((MainActivity) getActivity()).user.getUid()).addValueEventListener(new ValueEventListener() {
@@ -369,6 +373,108 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 
     }
 
+    public void play(songWithTitle song) {
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("list", favoriteList);
+        bundle.putString("selectedSong", song.getSongTitle());
+        bundle.putString("Title", song.getMovietitle());
+        //bundle.putString("trackNo",song.getTrackNo());
+
+
+        ArrayList<Song> oneSong = new ArrayList<Song>();
+        for (Song songs : favoriteList) {
+            if (songs.getMovieTitle().equalsIgnoreCase(song.getMovietitle()) && songs.getSongTitle().equalsIgnoreCase(song.getSongTitle())) {
+                oneSong.add(songs);
+
+            }
+        }
+        StorageUtil storageUtil = new StorageUtil(getContext());
+        storageUtil.storeAudio((ArrayList<Song>) oneSong);
+        storageUtil.storeAudioIndex(0);
+        Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+        getActivity().sendBroadcast(setplaylist);
+        StorageUtil storage = new StorageUtil(getContext());
+        storage.storeAudioIndex(0);
+        Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
+        getActivity().sendBroadcast(broadcastIntent);
+        ((MainActivity) getActivity()).setIsDetailSet(false);
+        Toast.makeText(getContext(), song.getMovietitle(), Toast.LENGTH_SHORT).show();
+
+/*
+        Intent i = new Intent(getContext(), lyricsActivity.class);
+
+
+        i.putExtras(bundle);
+        startActivity(i);*/
+
+    }
+
+    public void playAll(songWithTitle songwith) {
+        int index = 0;
+        for (Song song : favoriteList) {
+            if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
+                index = favoriteList.indexOf(song);
+            }
+        }
+        if (!playListSet) {
+            StorageUtil storageUtil = new StorageUtil(getContext());
+            storageUtil.storeAudio((ArrayList<Song>) favoriteList);
+            storageUtil.storeAudioIndex(index);
+            Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+            getActivity().sendBroadcast(setplaylist);
+            playListSet = true;
+        }
+        StorageUtil storage = new StorageUtil(getContext());
+        storage.storeAudioIndex(index);
+
+        Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
+        getActivity().sendBroadcast(broadcastIntent);
+
+
+        ((MainActivity) getActivity()).setIsDetailSet(false);
+
+
+    }
+
+    public void addToQueue(songWithTitle songwith) {
+        StorageUtil storageUtil = new StorageUtil(getContext());
+
+        ArrayList<Song> list = storageUtil.loadAudio();
+        for (Song song : list) {
+            if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
+                Toast.makeText(getContext(), song.getSongTitle() + " is already exist", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        for (Song song : favoriteList) {
+            if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
+                list.add(song);
+                StorageUtil newUtil = new StorageUtil(getContext());
+                newUtil.storeAudio((ArrayList<Song>) list);
+                Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+                getActivity().sendBroadcast(setplaylist);
+                Toast.makeText(getContext(), song.getSongTitle() + " is added to queue", Toast.LENGTH_SHORT).show();
+                break;
+
+            }
+        }
+
+
+    }
+
+
+    public void removeFromFavorite(songWithTitle songwith){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(mainApp.getSp().removeFromFavorite(songwith.getMovietitle(), songwith.getSongTitle(), user)){
+            Toast.makeText(getContext(), "Removed from Favorite", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "Add to Favorites First", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
 }
 

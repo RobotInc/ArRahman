@@ -14,12 +14,14 @@ import android.support.v7.widget.SearchView;
 
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bss.arrahmanlyrics.R;
@@ -73,7 +75,7 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
     mainFragmentSongAdapter adapter;
     ProgressDialog dialog;
     SearchView searchView;
-    boolean isSetDetails = false;
+
     boolean playListSet = false;
 
     private OnFragmentInteractionListener mListener;
@@ -356,7 +358,7 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
     }
 
     public void play(songWithTitle song) {
-
+        ImageView icon = new ImageView(getContext());
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("list", passedList);
         bundle.putString("selectedSong", song.getSongTitle());
@@ -415,7 +417,7 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
         getActivity().sendBroadcast(broadcastIntent);
 
 
-        isSetDetails = false;
+        ((MainActivity) getActivity()).setIsDetailSet(false);
 
 
     }

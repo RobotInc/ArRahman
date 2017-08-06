@@ -3,6 +3,7 @@ package com.bss.arrahmanlyrics.adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 		this.mContext = context;
 		this.songlist = songlist;
 		this.s = songs;
+
 		//QuickAction.setDefaultColor(ResourcesCompat.getColor(s.getResources(), R.color.white, null));
 		//QuickAction.setDefaultTextColor(Color.BLACK);
 
@@ -54,7 +56,7 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 		ImageView dots;
 		CircularImageView imageView;
 		LinearLayout layout;
-
+		ImageView icon;
 
 		public MyViewHolder(View view) {
 			super(view);
@@ -64,6 +66,8 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 			dots = (ImageButton) view.findViewById(R.id.menu_button);
 			imageView = (CircularImageView) view.findViewById(R.id.songCover);
 			layout = (LinearLayout) view.findViewById(R.id.songholder);
+			icon = (ImageView) view.findViewById(R.id.playhingicon);
+
 			layout.setOnClickListener(this);
 			dots.setOnClickListener(this);
 
@@ -96,11 +100,13 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 				public void onItemClick(ActionItem item) {
 					if(item.getActionId()==1){
 						s.play(getmodel(movietitle.getText().toString(),name.getText().toString()));
+						icon.setVisibility(View.VISIBLE);
 					}else if(item.getActionId()==2){
 						s.playAll(getmodel(movietitle.getText().toString(),name.getText().toString()));
 					}else if(item.getActionId()==3){
 						s.addToQueue(getmodel(movietitle.getText().toString(),name.getText().toString()));
 					}else if(item.getActionId()==4){
+						//songWithTitle song = getmodel(movietitle.getText().toString(),name.getText().toString());
 						s.addToFavorite(getmodel(movietitle.getText().toString(),name.getText().toString()));
 					}else if(item.getActionId()==5){
 						s.removeFromFavorite(getmodel(movietitle.getText().toString(),name.getText().toString()));
@@ -146,7 +152,7 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 		Glide.with(mContext).load(actualsong.getImages()).into(holder.imageView);
 
 		holder.lyricist.setText(FirstLetterUpperCase.convert("Lyricist: " + actualsong.getLyricistName()));
-		holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: " + actualsong.getMovietitle()));
+		holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: "+actualsong.getMovietitle()));
 
 		//holder.lyricist.setText("Lyricist : " + actualsong.getLyricistNames());
 
@@ -191,9 +197,11 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 	}
 
 	public songWithTitle getmodel(String movie,String songTitle){
-		movie = movie.replace("Movie: ","");
+		movie = movie.replaceAll("Movie: ","");
 		for(songWithTitle songwith:songlist){
-			if(songwith.getMovietitle().equalsIgnoreCase(movie)&&songwith.getSongTitle().equalsIgnoreCase(songTitle)){
+
+			if(songwith.getMovietitle().trim().equalsIgnoreCase(movie)&&songwith.getSongTitle().trim().equalsIgnoreCase(songTitle)){
+
 				return songwith;
 			}
 		}

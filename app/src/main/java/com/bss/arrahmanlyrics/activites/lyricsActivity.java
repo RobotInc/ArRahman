@@ -124,7 +124,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         topView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                songListFragment.scrollTo(mainApp.getPlayer().getCurrentPlayingSong());
+                songListFragment.scrollTo(player.getActiveAudio().getSongTitle());
                 return false;
 
             }
@@ -282,8 +282,16 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 			}
 		});*/
         if (passedList != null) {
-            songTitle = ((Song) passedList.get(0)).getSongTitle();
-            preparePlaylist();
+            if(passedList.size()>0) {
+                songTitle = ((Song) passedList.get(0)).getSongTitle();
+                preparePlaylist();
+            }else {
+                finish();
+                Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            finish();
+            Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
         }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -298,7 +306,6 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                 int position = player.getCurrrentDuration();
                 bar.setProgress(position);
                 currentDur.setText(Helper.durationCalculator(position));
-                setDetails();
 
             }
             mHandler.postDelayed(runnable, 1000);
@@ -325,7 +332,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getService();
             serviceBound = true;
-            //player.setCallbacks(lyricsActivity.this);
+            player.setCallbacks(lyricsActivity.this);
             setDetails();
         }
 
@@ -576,7 +583,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         } else {
             shuffle.setImageResource(R.drawable.shuffle);
         }
-
+        songListFragment.scrollTo(song.getSongTitle());
         checkFavoriteItem(song.getMovieTitle(), song.getSongTitle());
 
 
@@ -769,7 +776,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                     } else {
                         shuffle.setImageResource(R.drawable.shuffle);
                     }
-
+                    songListFragment.scrollTo(song.getSongTitle());
                     checkFavoriteItem(song.getMovieTitle(), song.getSongTitle());
                     isSetDetails = true;
                 }

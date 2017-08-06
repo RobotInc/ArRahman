@@ -40,6 +40,8 @@ import com.bss.arrahmanlyrics.utils.RecyclerItemClickListener;
 import com.bss.arrahmanlyrics.utils.SimpleDividerItemDecoration;
 import com.bss.arrahmanlyrics.utils.StorageUtil;
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -93,6 +95,55 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 	int presentpos = 0;
 	private OnFragmentInteractionListener mListener;
 
+    public void play(songWithTitle song) {
+		int index = 0;
+		for (Song songs : passedList) {
+			if (songs.getMovieTitle().equalsIgnoreCase(song.getMovietitle()) && songs.getSongTitle().equalsIgnoreCase(song.getSongTitle())) {
+				index = passedList.indexOf(songs);
+			}
+		}
+
+		if (!playListSet) {
+			StorageUtil storageUtil = new StorageUtil(getContext());
+			storageUtil.storeAudio((ArrayList<Song>) passedList);
+			storageUtil.storeAudioIndex(0);
+			Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+			getActivity().sendBroadcast(setplaylist);
+			playListSet = true;
+		}
+		mCallback.onSongSelected(index);
+
+		Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
+		getActivity().sendBroadcast(broadcastIntent);
+		((lyricsActivity)getActivity()).setisSetDetails(false);
+
+    }
+
+	public void removeFromQueue(songWithTitle songwith) {
+		StorageUtil storageUtil = new StorageUtil(getContext());
+
+		ArrayList<Song> list = storageUtil.loadAudio();
+		for (Song song : list) {
+			if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
+				list.remove(song);
+				passedList.remove(song);
+				StorageUtil newUtil = new StorageUtil(getContext());
+				newUtil.storeAudio((ArrayList<Song>) list);
+				songsListArray.remove(songwith);
+
+				adapter.notifyDataSetChanged();
+				Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+				getActivity().sendBroadcast(setplaylist);
+				Toast.makeText(getContext(), song.getSongTitle() + " is removed from queue", Toast.LENGTH_SHORT).show();
+				break;
+			}
+		}
+
+
+
+	}
+
+
 	public interface OnSongSelectedListener {
 		public void onSongSelected(int position);
 	}
@@ -140,63 +191,18 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		passedList = getActivity().getIntent().getExtras().getParcelableArrayList("list");
 		playListSet = false;
 		songsListArray = new ArrayList<>();
-		adapter = new fragmentSongAdapter(getContext(), songsListArray);
+		adapter = new fragmentSongAdapter(getContext(), songsListArray,songList.this);
 		songlistView.setAdapter(adapter);
 		final CustomLayoutManager customLayoutManager = new CustomLayoutManager(getContext());
 		customLayoutManager.setSmoothScrollbarEnabled(true);
 		songlistView.setThumbColor(Color.parseColor("#a000ffae"));
 		songlistView.setLayoutManager(customLayoutManager);
 
-		songlistView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-				songWithTitle song = filtered.get(position);
 
-				int index = 0;
-				for (Song songs : passedList) {
-					if (songs.getMovieTitle().equalsIgnoreCase(song.getMovietitle()) && songs.getSongTitle().equalsIgnoreCase(song.getSongTitle())) {
-						index = passedList.indexOf(songs);
-					}
-				}
-				/*StorageUtil storage = new StorageUtil(getContext());
-				storage.storeAudioIndex(index);*/
-				/*try {
-					EqualizerView eqold = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(presentpos).itemView).findViewById(R.id.equalizer_view);
-
-					eqold.setVisibility(View.INVISIBLE);
-					eqold.stopBars();
-					Toast.makeText(getContext(), "new position: " + index+ " old position : " + presentpos + " adapter size : " + adapter.getItemCount(), Toast.LENGTH_LONG).show();
-					EqualizerView eqnew = (EqualizerView) (songlistView.findViewHolderForAdapterPosition(index).itemView).findViewById(R.id.equalizer_view);
-
-					eqnew.setVisibility(View.VISIBLE);
-					eqnew.animateBars();
-					presentpos = index;
-				} catch (Exception e) {
-					Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-				}*/
-				if (!playListSet) {
-					StorageUtil storageUtil = new StorageUtil(getContext());
-					storageUtil.storeAudio((ArrayList<Song>) passedList);
-					storageUtil.storeAudioIndex(0);
-					Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
-					getActivity().sendBroadcast(setplaylist);
-					playListSet = true;
-				}
-				mCallback.onSongSelected(index);
-
-				Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
-				getActivity().sendBroadcast(broadcastIntent);
-				((lyricsActivity)getActivity()).setisSetDetails(false);
-				//Service is active
-				//Send a broadcast to the service -> PLAY_NEW_AUDIO
-
-				//			((lyricsActivity)getActivity()).bar.setMax((((lyricsActivity) getActivity()).player.getDuration()));
-
-				//mainApp.getPlayer().setLyricsManually(getActivity().getIntent().getExtras().getString("Title"), song.getSongTitle());
-			}
-		}));
 		songlistView.addItemDecoration(new DividerItemDecoration(getContext(), 75, true));
-		songref = FirebaseDatabase.getInstance().getReference();
+
+
+				songref = FirebaseDatabase.getInstance().getReference();
 
 		songref.child("AR Rahman").child("Tamil").addValueEventListener(new ValueEventListener() {
 			@Override
@@ -320,7 +326,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		for (songWithTitle song : songsListArray) {
 			if (song.getSongTitle().equals(songTitle)) {
 				int index = songsListArray.indexOf(song);
-				songlistView.smoothScrollToPosition(index);
+				songlistView.scrollToPosition(index);
 				break;
 			}
 		}

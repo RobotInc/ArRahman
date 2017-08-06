@@ -4,6 +4,7 @@
         android:id="@+id/nav_log"
 
         android:title="Log out" />
+
     <item
         android:id="@+id/about"
 

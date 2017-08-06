@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -633,10 +634,7 @@ public class MainActivity extends AppCompatActivity
 				Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 				signIn();
 				return true;
-			/*case R.id.feedback:
-				Intent intent = new Intent(getApplicationContext(), feedback.class);
-				startActivity(intent);
-				return true;*/
+
 			case R.id.about:
 				Intent aboutPage = new Intent(getApplicationContext(), about.class);
 				startActivity(aboutPage);

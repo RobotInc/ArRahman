@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.adapter.AlbumSongAdapter;
+import com.bss.arrahmanlyrics.mainApp;
 import com.bss.arrahmanlyrics.models.Song;
 import com.bss.arrahmanlyrics.models.slideSong;
 import com.bss.arrahmanlyrics.models.songWithTitle;
@@ -41,6 +42,8 @@ import com.bss.arrahmanlyrics.utils.MediaPlayerService;
 import com.bss.arrahmanlyrics.utils.RecyclerItemClickListener;
 import com.bss.arrahmanlyrics.utils.SquareImageView;
 import com.bss.arrahmanlyrics.utils.StorageUtil;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -79,6 +82,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
     Handler mhandler = new Handler();
     boolean isSetDetails = false;
     boolean playListSet = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +102,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
         seekbar = (SeekBar) findViewById(R.id.small_seekbar);
         passedList = getIntent().getExtras().getParcelableArrayList("list");
         list = new ArrayList<>();
-        adapter = new AlbumSongAdapter(getApplicationContext(), list);
+        adapter = new AlbumSongAdapter(getApplicationContext(), list, albumSongList.this);
         rc = (FastScrollRecyclerView) findViewById(R.id.albumsongrv);
         rc.setAdapter(adapter);
         final CustomLayoutManager customLayoutManager = new CustomLayoutManager(getApplicationContext());
@@ -124,13 +128,35 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
                 StorageUtil storage = new StorageUtil(getApplicationContext());
                 storage.storeAudioIndex(index);
 
-                        Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
-                        sendBroadcast(broadcastIntent);
-                        Toast.makeText(getApplicationContext(),"Current playlist replaced with"+FirstLetterUpperCase.convert(getIntent().getExtras().getString("Title"))+" album",Toast.LENGTH_SHORT).show();
+                Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
+                sendBroadcast(broadcastIntent);
+                Toast.makeText(getApplicationContext(), "Current playlist replaced with" + FirstLetterUpperCase.convert(getIntent().getExtras().getString("Title")) + " album", Toast.LENGTH_SHORT).show();
 
                 isSetDetails = false;
 
 
+            }
+        });
+        layout = (LinearLayout) findViewById(R.id.smallview);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Song selectedAlbum = filtered.get(position);
+                Bundle songs = new Bundle();
+                songs.putParcelableArrayList("list", new StorageUtil(getApplicationContext()).loadAudio());
+                //songs.putSerializable("map",(HashMap<String,Object>)values.get(selectedAlbum.getName()));
+                //songs.putString("Title", selectedAlbum.getName());
+                //songs.putString("selectedSong","");
+
+                //songs.putByteArray("image",albumList.get(position).getThumbnail());
+
+                try {
+                    Intent intent = new Intent(getApplicationContext(), lyricsActivity.class);
+                    intent.putExtras(songs);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.i("Exception", e.getMessage());
+                }
             }
         });
         songRef = FirebaseDatabase.getInstance().getReference();
@@ -148,7 +174,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
 
             }
         });
-        rc.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
+       /* rc.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 slideSong song = list.get(position);
@@ -177,29 +203,9 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
                 sendBroadcast(broadcastIntent);
                 isSetDetails = false;
             }
-        }));
-        layout = (LinearLayout) findViewById(R.id.smallview);
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Song selectedAlbum = filtered.get(position);
-                Bundle songs = new Bundle();
-                songs.putParcelableArrayList("list", new StorageUtil(getApplicationContext()).loadAudio());
-                //songs.putSerializable("map",(HashMap<String,Object>)values.get(selectedAlbum.getName()));
-                //songs.putString("Title", selectedAlbum.getName());
-                //songs.putString("selectedSong","");
+        }));*/
 
-                //songs.putByteArray("image",albumList.get(position).getThumbnail());
 
-                try {
-                    Intent intent = new Intent(getApplicationContext(), lyricsActivity.class);
-                    intent.putExtras(songs);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Log.i("Exception", e.getMessage());
-                }
-            }
-        });
         adapter.notifyDataSetChanged();
         mhandler.post(runnable);
     }
@@ -411,7 +417,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
     private void setDetails() {
         if (player != null) {
             if (player.isPlaying()) {
-                if(!isSetDetails){
+                if (!isSetDetails) {
                     seekbar.setMax(player.getDuration());
                     Song song = player.getActiveAudio();
                     songtitle.setText(song.getSongTitle());
@@ -468,6 +474,121 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+
+    public void play(slideSong song) {
+        String movieTitle = getIntent().getExtras().getString("Title");
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("list", passedList);
+        bundle.putString("selectedSong", song.getSongName());
+        bundle.putString("Title", getIntent().getExtras().getString("Title"));
+        //bundle.putString("trackNo",song.getTrackNo());
+
+
+        ArrayList<Song> oneSong = new ArrayList<Song>();
+        for (Song songs : passedList) {
+            if (songs.getMovieTitle().equalsIgnoreCase(movieTitle) && songs.getSongTitle().equalsIgnoreCase(song.getSongName())) {
+                oneSong.add(songs);
+
+            }
+        }
+        StorageUtil storageUtil = new StorageUtil(getApplicationContext());
+        storageUtil.storeAudio((ArrayList<Song>) oneSong);
+        storageUtil.storeAudioIndex(0);
+        Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+        sendBroadcast(setplaylist);
+        StorageUtil storage = new StorageUtil(getApplicationContext());
+        storage.storeAudioIndex(0);
+        Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
+        sendBroadcast(broadcastIntent);
+        isSetDetails = false;
+        Toast.makeText(getApplicationContext(), song.getSongName(), Toast.LENGTH_SHORT).show();
+
+/*
+        Intent i = new Intent(getContext(), lyricsActivity.class);
+
+
+        i.putExtras(bundle);
+        startActivity(i);*/
+
+    }
+
+    public void playAll(slideSong songwith) {
+        String movieTitle = getIntent().getExtras().getString("Title");
+        int index = 0;
+
+        for (Song song : passedList) {
+            if (song.getMovieTitle().equalsIgnoreCase(movieTitle) && song.getSongTitle().equalsIgnoreCase(songwith.getSongName())) {
+                index = passedList.indexOf(song);
+            }
+        }
+        if (!playListSet) {
+            StorageUtil storageUtil = new StorageUtil(getApplicationContext());
+            storageUtil.storeAudio((ArrayList<Song>) passedList);
+            storageUtil.storeAudioIndex(index);
+            Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+            sendBroadcast(setplaylist);
+            playListSet = true;
+        }
+        StorageUtil storage = new StorageUtil(getApplicationContext());
+        storage.storeAudioIndex(index);
+
+        Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
+        sendBroadcast(broadcastIntent);
+
+
+        isSetDetails = false;
+
+
+    }
+
+    public void addToQueue(slideSong songwith) {
+        String movieTitle = getIntent().getExtras().getString("Title");
+        StorageUtil storageUtil = new StorageUtil(getApplicationContext());
+
+        ArrayList<Song> list = storageUtil.loadAudio();
+        for (Song song : list) {
+            if (song.getMovieTitle().equalsIgnoreCase(movieTitle) && song.getSongTitle().equalsIgnoreCase(songwith.getSongName())) {
+                Toast.makeText(getApplicationContext(), song.getSongTitle() + " is already exist", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        for (Song song : passedList) {
+            if (song.getMovieTitle().equalsIgnoreCase(movieTitle) && song.getSongTitle().equalsIgnoreCase(songwith.getSongName())) {
+                list.add(song);
+                StorageUtil newUtil = new StorageUtil(getApplicationContext());
+                newUtil.storeAudio((ArrayList<Song>) list);
+                Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+                sendBroadcast(setplaylist);
+                Toast.makeText(getApplicationContext(), song.getSongTitle() + " is added to queue", Toast.LENGTH_SHORT).show();
+                break;
+
+            }
+        }
+
+
+    }
+
+    public void addToFavorite(slideSong songwith){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String movieTitle = getIntent().getExtras().getString("Title");
+
+        if(mainApp.getSp().addToFavorite(movieTitle, songwith.getSongName(), user)){
+            Toast.makeText(getApplicationContext(), "Added to Favorite", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getApplicationContext(), "Already Exist", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    public void removeFromFavorite(slideSong songwith){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String movieTitle = getIntent().getExtras().getString("Title");
+        if(mainApp.getSp().removeFromFavorite(movieTitle, songwith.getSongName(), user)){
+            Toast.makeText(getApplicationContext(), "Removed from Favorite", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getApplicationContext(), "Add to Favorites First", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
