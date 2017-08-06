@@ -68,9 +68,10 @@ android:layout_below="@id/small_seekbar"
                 <ImageView
                     android:id="@+id/img_bottom_slideone"
                     android:layout_width="?attr/actionBarSize"
-                    android:layout_height="?attr/actionBarSize"
+                    android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/bg_default_album_art"></ImageView>
+                    android:background="@drawable/imgbg"
+                    android:src="@drawable/bg_default_album_art"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -81,7 +82,7 @@ android:layout_below="@id/small_seekbar"
                     android:orientation="vertical">
 
 
-                    <TextView
+                    <com.bss.arrahmanlyrics.utils.lyricsTextView
                         android:id="@+id/small_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -89,11 +90,11 @@ android:layout_below="@id/small_seekbar"
                         android:ellipsize="end"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:text="Movie Title"
+                        android:text="Select Song"
                         android:textColor="#ffffff"
                         android:textSize="16sp"/>
 
-                    <TextView
+                    <com.bss.arrahmanlyrics.utils.lyricsTextView
                         android:id="@+id/small_song"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -102,7 +103,7 @@ android:layout_below="@id/small_seekbar"
                         android:gravity="center"
                         android:maxLines="1"
                         android:paddingTop="4dp"
-                        android:text="Song Title"
+                        android:text="To play"
                         android:textColor="#ffffff"
                         android:textSize="13sp"/>
 

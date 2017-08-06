@@ -40,6 +40,7 @@ import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.models.Album;
 import com.bss.arrahmanlyrics.models.Song;
 import com.bss.arrahmanlyrics.utils.ArtworkUtils;
+import com.bss.arrahmanlyrics.utils.FirstLetterUpperCase;
 import com.bss.arrahmanlyrics.utils.Helper;
 import com.bss.arrahmanlyrics.utils.MediaPlayerService;
 
@@ -258,11 +259,12 @@ public class MainActivity extends AppCompatActivity
 	private Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
-			if (player != null && player.isPlaying()) {
-				int position = player.getCurrrentDuration();
-				seekbar.setProgress(position);
-				setDetails();
-
+			if (player != null) {
+				if(player.isPlaying()) {
+					int position = player.getCurrrentDuration();
+					seekbar.setProgress(position);
+					setDetails();
+				}
 			}
 			mHandler.postDelayed(runnable, 1000);
 		}
@@ -380,11 +382,13 @@ public class MainActivity extends AppCompatActivity
 
 				seekbar.setMax(player.getDuration());
 				Song song = player.getActiveAudio();
-				songtitle.setText(song.getSongTitle());
-				movietitle.setText(song.getMovieTitle());
+				songtitle.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
+				movietitle.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
 				smallplay.setImageResource(android.R.drawable.ic_media_pause);
 				setBackground(song);
-
+				if(dialog.isShowing()){
+					dialog.hide();
+				}
 
 			}
 		}
@@ -545,11 +549,14 @@ public class MainActivity extends AppCompatActivity
 	private void setDetails() {
 		if (player != null) {
 			if (player.isPlaying()) {
+				if(dialog.isShowing()){
+					dialog.hide();
+				}
 				if(!isDetailSet){
 					seekbar.setMax(player.getDuration());
 					Song song = player.getActiveAudio();
-					songtitle.setText(song.getSongTitle());
-					movietitle.setText(song.getMovieTitle());
+					songtitle.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
+					movietitle.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
 					smallplay.setImageResource(android.R.drawable.ic_media_pause);
 					setBackground(song);
 					isDetailSet = true;
@@ -666,5 +673,9 @@ public class MainActivity extends AppCompatActivity
 	public void setIsDetailSet(Boolean value){
 		isDetailSet = value;
 
+	}
+	public void setDialog(){
+		dialog.setMessage("Loading song");
+		dialog.show();
 	}
 }

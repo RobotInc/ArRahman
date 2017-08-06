@@ -66,7 +66,7 @@ public class mainFragmentSongAdapter extends RecyclerView.Adapter<mainFragmentSo
 			dots = (ImageButton) view.findViewById(R.id.menu_button);
 			imageView = (CircularImageView) view.findViewById(R.id.songCover);
 			layout = (LinearLayout) view.findViewById(R.id.songholder);
-			icon = (ImageView) view.findViewById(R.id.playhingicon);
+
 
 			layout.setOnClickListener(this);
 			dots.setOnClickListener(this);

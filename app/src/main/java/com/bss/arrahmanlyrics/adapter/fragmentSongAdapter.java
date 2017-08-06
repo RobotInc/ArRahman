@@ -51,7 +51,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
         ImageButton dots;
         LinearLayout layout;
-        ImageView playingicon;
+
         CircularImageView imageView;
 
 
@@ -62,7 +62,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
             movietitle = (TextView) view.findViewById(R.id.MovieTitle);
             dots = (ImageButton) view.findViewById(R.id.menu_button);
             layout = (LinearLayout) view.findViewById(R.id.playlistlayout);
-            playingicon = (ImageView) view.findViewById(R.id.playhingicon);
+
             imageView = (CircularImageView) view.findViewById(R.id.songCover);
             dots.setOnClickListener(this);
             layout.setOnClickListener(this);
@@ -91,7 +91,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
                 @Override
                 public void onItemClick(ActionItem item) {
                     if(item.getActionId()==1){
-                        playingicon.setVisibility(View.VISIBLE);
+
                         s.play(getmodel(movietitle.getText().toString(),name.getText().toString()));
                     }else if(item.getActionId()==3){
                         s.removeFromQueue(getmodel(movietitle.getText().toString(),name.getText().toString()));

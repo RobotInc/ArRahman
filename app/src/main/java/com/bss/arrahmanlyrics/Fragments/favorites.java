@@ -223,7 +223,9 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
                 HashMap<String, Object> movieMap = (HashMap<String, Object>) values.get(movies);
                 ArrayList<String> favoriteSongs = favorites.get(movies);
 
-
+                if(movieMap== null){
+                    return;
+                }
                 for (String song : favoriteSongs) {
                     HashMap<String, Object> songMap = (HashMap<String, Object>) movieMap.get(song);
 
@@ -399,6 +401,8 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
         Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
         getActivity().sendBroadcast(broadcastIntent);
         ((MainActivity) getActivity()).setIsDetailSet(false);
+        ((MainActivity) getActivity()).setDialog();
+
         Toast.makeText(getContext(), song.getMovietitle(), Toast.LENGTH_SHORT).show();
 
 /*
@@ -433,6 +437,8 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 
 
         ((MainActivity) getActivity()).setIsDetailSet(false);
+        ((MainActivity) getActivity()).setDialog();
+
 
 
     }

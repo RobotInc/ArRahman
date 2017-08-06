@@ -116,6 +116,8 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
 		getActivity().sendBroadcast(broadcastIntent);
 		((lyricsActivity)getActivity()).setisSetDetails(false);
+		((lyricsActivity)getActivity()).setDialog();
+
 
     }
 
@@ -189,6 +191,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		setHasOptionsMenu(true);
 		songlistView = (FastScrollRecyclerView) rootview.findViewById(R.id.albumPlayList);
 		passedList = getActivity().getIntent().getExtras().getParcelableArrayList("list");
+
 		playListSet = false;
 		songsListArray = new ArrayList<>();
 		adapter = new fragmentSongAdapter(getContext(), songsListArray,songList.this);
@@ -322,7 +325,9 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 	}
 
 	public void scrollTo(String songTitle) {
-		Log.e("size", String.valueOf(songsListArray.size()));
+		if(songsListArray == null){
+			return;
+		}
 		for (songWithTitle song : songsListArray) {
 			if (song.getSongTitle().equals(songTitle)) {
 				int index = songsListArray.indexOf(song);

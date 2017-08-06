@@ -1,5 +1,6 @@
 package com.bss.arrahmanlyrics.activites;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import com.bss.arrahmanlyrics.R;
 import com.bss.arrahmanlyrics.mainApp;
 import com.bss.arrahmanlyrics.models.Song;
 import com.bss.arrahmanlyrics.utils.ArtworkUtils;
+import com.bss.arrahmanlyrics.utils.FirstLetterUpperCase;
 import com.bss.arrahmanlyrics.utils.Helper;
 import com.bss.arrahmanlyrics.utils.MediaPlayerService;
 import com.bss.arrahmanlyrics.utils.StorageUtil;
@@ -76,6 +78,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
     ImageView left, right;
     SmallBang bang;
     EditText searchBar;
+    ProgressDialog dialog;
     boolean isSetDetails = false;
     LinearLayout topView;
     public MediaPlayerService player;
@@ -91,7 +94,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 
     TextView song_title, album_title;
 
-//MusicPlayer mainApp.getPlayer();
+
 
     private Handler mHandler = new Handler();
 
@@ -103,7 +106,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         toolbar = (Toolbar) findViewById(R.id.lyricstoolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        dialog = new ProgressDialog(lyricsActivity.this);
         //().setStatusBarColor(Color.parseColor("#a000ffae"));
         links = new HashMap<>();
         bang = SmallBang.attach2Window(this);
@@ -284,7 +287,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         if (passedList != null) {
             if(passedList.size()>0) {
                 songTitle = ((Song) passedList.get(0)).getSongTitle();
-                preparePlaylist();
+                setLyricsManually(movieName,songTitle);
             }else {
                 finish();
                 Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
@@ -302,10 +305,13 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (player != null && player.isPlaying()) {
-                int position = player.getCurrrentDuration();
-                bar.setProgress(position);
-                currentDur.setText(Helper.durationCalculator(position));
+            if (player != null) {
+                if(player.isPlaying()){
+                    int position = player.getCurrrentDuration();
+                    bar.setProgress(position);
+                    currentDur.setText(Helper.durationCalculator(position));
+
+                }
 
             }
             mHandler.postDelayed(runnable, 1000);
@@ -342,62 +348,6 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         }
     };
 
-    private void preparePlaylist() {
-		/*List<songUlr> ulrs = new ArrayList<>();
-		songList.clear();
-		SortedSet<String> sorted = new TreeSet<>();
-		for (String songs : values.keySet()) {
-			if (!songs.equals("IMAGE")) {
-				songList.add(songs);
-				sorted.add(songs);
-			}
-
-		}
-
-		for(String sortedName:sorted){
-			HashMap<String, Object> oneSong = (HashMap<String, Object>) values.get(sortedName);
-			songUlr url = new songUlr(sortedName,String.valueOf(oneSong.get("Download")));
-			ulrs.add(url);
-		}*/
-
-		/*mainApp.getPlayer().setPlayList(passedList);
-		mainApp.getPlayer().setPlay(songTitle,movieName, bar, totalDur,lyricsActivity.this,play,favorite,enLyrics,oLyrics,songListFragment,cover);*/
-        setLyricsManually(movieName, songTitle);
-
-        //play.setImageResource(R.drawable.ic_action_pause);
-        Log.e("duration", String.valueOf(mainApp.getPlayer().getDuration()));
-        //bar.setMax((int) (player.getDuration()));
-        //bar.setProgress(((MainActivity)getApplicationContext()).player.getCurrrentDuration());
-		/*totalDur.setText(String.format("%02d : %02d ",
-				TimeUnit.MILLISECONDS.toMinutes((long) ((MainActivity)getApplicationContext()).player.getDuration()),
-				TimeUnit.MILLISECONDS.toSeconds((long) mainApp.getPlayer().getDuration()) -
-						TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-								mainApp.getPlayer().getDuration())))
-		);
-
-		//myHandler.postDelayed(UpdateSongTime, 100);
-	}
-
-
-	/*   private void setLyrics() {
-		   final StringBuilder builderEnglish = new StringBuilder();
-		   builderEnglish.append(selectedSong.get("English"));
-		   builderEnglish.append(selectedSong.get("EnglishOne"));
-		   final StringBuilder builderOther = new StringBuilder();
-		   builderOther.append(selectedSong.get("Others"));
-		   builderOther.append(selectedSong.get("OthersOne"));
-
-		   Typeface english = Typeface.createFromAsset(getAssets(),"english.ttf");
-		   title.setText(getIntent().getExtras().getString("SongTitle"));
-
-
-		   lyricist.setText(getIntent().getExtras().getString("lyricist"));
-
-
-		   lyricsText.setText(String.valueOf(builderOther));
-		   lyricsText.setTypeface(english);
-	   }*/
-    }
 
     @Override
     protected void onPause() {
@@ -574,8 +524,8 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         totalDur.setText(Helper.durationCalculator(player.getDuration()));
         bar.setMax(player.getDuration());
         Song song = player.getActiveAudio();
-        song_title.setText(song.getSongTitle());
-        album_title.setText(song.getMovieTitle());
+        song_title.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
+        album_title.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
         play.setImageResource(R.drawable.btnpause);
         setLyricsManually(song.getMovieTitle(), song.getSongTitle());
         if (player.isShuffleOn()) {
@@ -585,6 +535,9 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         }
         songListFragment.scrollTo(song.getSongTitle());
         checkFavoriteItem(song.getMovieTitle(), song.getSongTitle());
+        if(dialog.isShowing()){
+            dialog.hide();
+        }
 
 
     }
@@ -709,12 +662,18 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
             //player.stopSelf();
 
         }
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
     public void playAudio(int audioIndex, ArrayList<Song> audioList) {
@@ -767,8 +726,8 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                     totalDur.setText(Helper.durationCalculator(player.getDuration()));
                     bar.setMax(player.getDuration());
                     Song song = player.getActiveAudio();
-                    song_title.setText(song.getSongTitle());
-                    album_title.setText(song.getMovieTitle());
+                    song_title.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
+                    album_title.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
                     play.setImageResource(R.drawable.btnpause);
                     setLyricsManually(song.getMovieTitle(), song.getSongTitle());
                     if (player.isShuffleOn()) {
@@ -779,6 +738,9 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                     songListFragment.scrollTo(song.getSongTitle());
                     checkFavoriteItem(song.getMovieTitle(), song.getSongTitle());
                     isSetDetails = true;
+                    if(dialog.isShowing()){
+                        dialog.hide();
+                    }
                 }
             }
         }
@@ -839,5 +801,12 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 
     public void setisSetDetails(boolean value) {
         isSetDetails = false;
+
+    }
+
+    public void setDialog()
+    {
+        dialog.setMessage("loading song");
+        dialog.show();
     }
 }

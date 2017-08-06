@@ -73,9 +73,9 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
     HashMap<String, Object> values;
     DatabaseReference songref;
     mainFragmentSongAdapter adapter;
-    ProgressDialog dialog;
-    SearchView searchView;
 
+    SearchView searchView;
+    ProgressDialog dialog;
     boolean playListSet = false;
 
     private OnFragmentInteractionListener mListener;
@@ -383,7 +383,10 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
         Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
         getActivity().sendBroadcast(broadcastIntent);
         ((MainActivity) getActivity()).setIsDetailSet(false);
+        ((MainActivity) getActivity()).setDialog();
+
         Toast.makeText(getContext(), song.getMovietitle(), Toast.LENGTH_SHORT).show();
+
 
 /*
         Intent i = new Intent(getContext(), lyricsActivity.class);
@@ -418,7 +421,7 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
 
 
         ((MainActivity) getActivity()).setIsDetailSet(false);
-
+        ((MainActivity) getActivity()).setDialog();
 
     }
 
@@ -426,13 +429,16 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
         StorageUtil storageUtil = new StorageUtil(getContext());
         setPlayList();
         ArrayList<Song> list = storageUtil.loadAudio();
-        for (Song song : list) {
-            if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
-                Toast.makeText(getContext(), song.getSongTitle() + " is already exist", Toast.LENGTH_SHORT).show();
-                return;
+        if(list != null) {
+            for (Song song : list) {
+                if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
+                    Toast.makeText(getContext(), song.getSongTitle() + " is already exist", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
+        }else {
+            list = new ArrayList<>();
         }
-
         for (Song song : passedList) {
             if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
                 list.add(song);

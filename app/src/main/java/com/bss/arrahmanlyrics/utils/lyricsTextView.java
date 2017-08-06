@@ -11,7 +11,7 @@ import android.widget.TextView;
  */
 
 
-public class lyricsTextView extends TextView {
+public class lyricsTextView extends android.support.v7.widget.AppCompatTextView {
 
 	public lyricsTextView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);

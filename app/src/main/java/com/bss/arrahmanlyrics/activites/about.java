@@ -26,7 +26,7 @@ public class about extends AppCompatActivity {
 		String userEmail = user.getEmail();
 		String des = "We all Know how magical AR Rahman's tunes are! And it's pleasure to sing along with the help of lyrics. So we made this musical app as a tribute to AR Rahman. Explore and feel the Music";
 		Element versionElement = new Element();
-		versionElement.setTitle("Version 1.01");
+		versionElement.setTitle("Version 1.2");
 		Element telegram = new Element();
 		telegram.setTitle("Chat with us in Telegram");
 		telegram.setValue("https://t.me/beyonity");

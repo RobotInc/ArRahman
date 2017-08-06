@@ -1,5 +1,6 @@
 package com.bss.arrahmanlyrics.activites;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -82,7 +83,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
     Handler mhandler = new Handler();
     boolean isSetDetails = false;
     boolean playListSet = false;
-
+    ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +94,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.holo_orange_light));
         Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "english.ttf");
         // setSupportActionBar(toolbar);
+        dialog = new ProgressDialog(albumSongList.this);
         getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkDarkTheme));
         smallplay = (ImageView) findViewById(R.id.small_toggle);
         smallplay.setOnClickListener(this);
@@ -130,9 +132,11 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
 
                 Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
                 sendBroadcast(broadcastIntent);
-                Toast.makeText(getApplicationContext(), "Current playlist replaced with" + FirstLetterUpperCase.convert(getIntent().getExtras().getString("Title")) + " album", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Current playlist replaced with " + FirstLetterUpperCase.convert(getIntent().getExtras().getString("Title")) + " album", Toast.LENGTH_SHORT).show();
 
                 isSetDetails = false;
+                dialog.setMessage("loading song");
+                dialog.show();
 
 
             }
@@ -373,10 +377,13 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (player != null && player.isPlaying()) {
-                int position = player.getCurrrentDuration();
-                seekbar.setProgress(position);
-                setDetails();
+            if (player != null) {
+                if(player.isPlaying()){
+                    int position = player.getCurrrentDuration();
+                    seekbar.setProgress(position);
+                    setDetails();
+                }
+
 
             }
             mhandler.postDelayed(runnable, 1000);
@@ -390,6 +397,10 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
             unbindService(serviceConnection);
             player.setCallbacks(null);
         }
+        if(dialog != null){
+            dialog.dismiss();
+        }
+
     }
 
     @Override
@@ -412,16 +423,22 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
             serviceBound = false;
             //player.setCallbacks(null);
         }
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
     private void setDetails() {
         if (player != null) {
             if (player.isPlaying()) {
                 if (!isSetDetails) {
+                    if(dialog.isShowing()){
+                        dialog.hide();
+                    }
                     seekbar.setMax(player.getDuration());
                     Song song = player.getActiveAudio();
-                    songtitle.setText(song.getSongTitle());
-                    movietitle.setText(song.getMovieTitle());
+                    songtitle.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
+                    movietitle.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
                     smallplay.setImageResource(android.R.drawable.ic_media_pause);
                     setBackground(song);
                     isSetDetails = true;
@@ -502,6 +519,8 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
         Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
         sendBroadcast(broadcastIntent);
         isSetDetails = false;
+        dialog.setMessage("loading song");
+        dialog.show();
         Toast.makeText(getApplicationContext(), song.getSongName(), Toast.LENGTH_SHORT).show();
 
 /*
@@ -538,6 +557,9 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
 
 
         isSetDetails = false;
+        dialog.setMessage("loading song");
+        dialog.show();
+
 
 
     }
