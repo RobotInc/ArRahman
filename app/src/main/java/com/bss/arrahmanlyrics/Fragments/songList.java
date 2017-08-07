@@ -376,5 +376,5 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 			Log.i("songname",song.getSongTitle());
 		}
 	}
-	
+
 }

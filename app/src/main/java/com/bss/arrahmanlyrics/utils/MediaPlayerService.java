@@ -75,6 +75,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private boolean mIsDucked = false;
     //List of available Audio files
     private ArrayList<Song> audioList;
+    NotificationCompat.Builder notificationBuilder;
     private int audioIndex = -1;
     private Song activeAudio; //an object of the currently playing audio
     public static final String ACTION_PLAY = "com.bss.arrahmanlyrics.ACTION_PLAY";
@@ -273,6 +274,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             equalizer = new Equalizer(0, mediaPlayer.getAudioSessionId());
             equalizer.setEnabled(true);
 
+
             //mediaPlayer.start();
 
         }
@@ -285,6 +287,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         if (mediaPlayer.isPlaying()) {
 
             mediaPlayer.stop();
+
         }
     }
 
@@ -292,6 +295,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
         if (mediaPlayer.isPlaying()) {
             fadeOut(1000);
+
             //mediaPlayer.pause();
             resumePosition = mediaPlayer.getCurrentPosition();
         }
@@ -303,6 +307,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
         if (!mediaPlayer.isPlaying()) {
             fadeInResume(1000);
+
             //mediaPlayer.seekTo(resumePosition);
             //mediaPlayer.start();
 
@@ -609,6 +614,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 if (mediaPlayer == null) return;
                 resumeMedia();
                 buildNotification(PlaybackStatus.PLAYING);
+                if(callbacks != null){
+                    callbacks.updateUi();
+                }
             }
 
             @Override
@@ -617,6 +625,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 if (mediaPlayer == null) return;
                 pauseMedia();
                 buildNotification(PlaybackStatus.PAUSED);
+                notificationBuilder.setOngoing(false);
+                if(callbacks != null){
+                    callbacks.updateUi();
+                }
             }
 
             @Override
@@ -626,6 +638,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToNext();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
+                if(callbacks != null){
+                    callbacks.updateUi();
+                }
             }
 
             @Override
@@ -635,6 +650,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToPrevious();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
+                if(callbacks != null){
+                    callbacks.updateUi();
+                }
             }
 
             @Override
@@ -644,6 +662,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 removeNotification();
                 //Stop the service
                 stopSelf();
+                if(callbacks != null){
+                    callbacks.updateUi();
+                }
             }
 
             @Override
@@ -735,13 +756,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 R.drawable.ic_launcher); //replace with your own image
 
         // Create a new Notification
-        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+        notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setShowWhen(false)
-                .setOngoing(true)
+                .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setCategory(Intent.CATEGORY_APP_MUSIC)
-                .setAutoCancel(false)
-                .setPriority(Notification.PRIORITY_DEFAULT)
+                 .setPriority(Notification.PRIORITY_DEFAULT)
                 // Set the Notification style
                 .setStyle(new NotificationCompat.MediaStyle()
                         // Attach our MediaSession token
@@ -762,7 +782,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
                 .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
-
+        if (playbackStatus == PlaybackStatus.PLAYING) {
+            notificationBuilder.setOngoing(true);
+        } else if (playbackStatus == PlaybackStatus.PAUSED) {
+            notificationBuilder.setOngoing(false);
+        }
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
@@ -1041,6 +1065,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     h.postDelayed(this, 100);
                 else {
                     mediaPlayer.pause();
+                    if(callbacks != null){
+                        callbacks.updateUi();
+                    }
                     //_player.release();
                 }
             }

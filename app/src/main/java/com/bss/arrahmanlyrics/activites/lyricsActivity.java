@@ -468,6 +468,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                 if (player == null) return;
                 Intent prev = new Intent(Broadcast_Prev);
                 sendBroadcast(prev);
+                setDialog();
                 isSetDetails = false;
                 break;
             }
@@ -475,6 +476,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                 if (player == null) return;
                 Intent next = new Intent(Broadcast_NEXT);
                 sendBroadcast(next);
+                setDialog();
                 isSetDetails = false;
                 break;
             }
@@ -527,6 +529,11 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         Song song = player.getActiveAudio();
         song_title.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
         album_title.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
+        if(player.isPlaying()){
+            play.setImageResource(R.drawable.btnpause);
+        }else {
+            play.setImageResource(R.drawable.btnplay);
+        }
         play.setImageResource(R.drawable.btnpause);
         setLyricsManually(song.getMovieTitle(), song.getSongTitle());
         if (player.isShuffleOn()) {
@@ -540,7 +547,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         if(dialog.isShowing()){
             dialog.hide();
         }
-
+        setDetails();
 
     }
 
@@ -745,6 +752,9 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                         dialog.hide();
                     }
                 }
+            }else {
+                play.setImageResource(R.drawable.btnplay);
+
             }
         }
 

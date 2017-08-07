@@ -1,5 +1,7 @@
 package com.bss.arrahmanlyrics.Fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -223,7 +225,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
                 HashMap<String, Object> movieMap = (HashMap<String, Object>) values.get(movies);
                 ArrayList<String> favoriteSongs = favorites.get(movies);
 
-                if(movieMap== null){
+                if (movieMap == null) {
                     return;
                 }
                 for (String song : favoriteSongs) {
@@ -233,6 +235,15 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
                     favoriteList.add(songModel);
                 }
             }
+        } else {
+            Intent mStartActivity = new Intent(getContext(), MainActivity.class);
+            int mPendingIntentId = 123456;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(getContext(), mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager mgr = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+            System.exit(0);
+
+
         }
         songlist.clear();
         if (favoriteList != null) {
@@ -347,7 +358,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
     @Override
     public void onResume() {
         super.onResume();
-        playListSet =false;
+        playListSet = false;
 
 
     }
@@ -360,7 +371,7 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             /*case R.id.feedback:
-				Intent intent = new Intent(getContext(), feedback.class);
+                Intent intent = new Intent(getContext(), feedback.class);
 				startActivity(intent);
 				return true;*/
 			/*case R.id.about:
@@ -441,7 +452,6 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
         ((MainActivity) getActivity()).setDialog();
 
 
-
     }
 
     public void addToQueue(songWithTitle songwith) {
@@ -472,12 +482,12 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
     }
 
 
-    public void removeFromFavorite(songWithTitle songwith){
+    public void removeFromFavorite(songWithTitle songwith) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(mainApp.getSp().removeFromFavorite(songwith.getMovietitle(), songwith.getSongTitle(), user)){
+        if (mainApp.getSp().removeFromFavorite(songwith.getMovietitle(), songwith.getSongTitle(), user)) {
             Toast.makeText(getContext(), "Removed from Favorite", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(getContext(), "Add to Favorites First", Toast.LENGTH_SHORT).show();
         }
 
