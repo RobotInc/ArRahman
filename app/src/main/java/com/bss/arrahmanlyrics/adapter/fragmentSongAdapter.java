@@ -1,6 +1,7 @@
 package com.bss.arrahmanlyrics.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
     private List<songWithTitle> songlist;
     QuickAction quickAction;
     songList s;
+    int selectedPos;
 
 
 
@@ -105,9 +107,17 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
             }
             if(R.id.playlistlayout == id){
+
+
                 s.play(getmodel(movietitle.getText().toString(),name.getText().toString()));
             }
 
+
+        }
+        public void changeItem(int pos){
+
+            selectedPos = getLayoutPosition();
+            notifyItemChanged(getLayoutPosition());
         }
     }
 
@@ -142,6 +152,8 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
 
         holder.lyricist.setText(FirstLetterUpperCase.convert("Lyricist: " + actualsong.getLyricistName()));
         holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: " + actualsong.getMovietitle()));
+
+
        // holder.eq.setVisibility(View.INVISIBLE);
 
        // holder.eq.animateBars();
@@ -204,6 +216,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
         songlist.addAll(songlists);
         notifyDataSetChanged();
     }
+
 
 
 }

@@ -91,6 +91,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
     public static final String Broadcast_Prev = "com.bss.arrahmanlyrics.activites.Previous";
     public static final String Broadcast_Shuffle = "com.bss.arrahmanlyrics.activites.Shuffle";
     public static final String Broadcast_UnShuffle = "com.bss.arrahmanlyrics.activites.UnShuffle";
+    public static final String Broadcast_REMOVEFROMQUERE= "com.bss.arrahmanlyrics.activites.removeFromQueue";
 
     TextView song_title, album_title;
 
@@ -534,6 +535,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
             shuffle.setImageResource(R.drawable.shuffle);
         }
         songListFragment.scrollTo(song.getSongTitle());
+
         checkFavoriteItem(song.getMovieTitle(), song.getSongTitle());
         if(dialog.isShowing()){
             dialog.hide();
@@ -735,6 +737,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                     } else {
                         shuffle.setImageResource(R.drawable.shuffle);
                     }
+
                     songListFragment.scrollTo(song.getSongTitle());
                     checkFavoriteItem(song.getMovieTitle(), song.getSongTitle());
                     isSetDetails = true;

@@ -107,6 +107,10 @@ public class MainActivity extends AppCompatActivity
 	public static final String Broadcast_Shuffle = "com.bss.arrahmanlyrics.activites.Shuffle";
 	public static final String Broadcast_UnShuffle = "com.bss.arrahmanlyrics.activites.UnShuffle";
 	public static final String Broadcast_EQTOGGLE= "com.bss.arrahmanlyrics.activites.eqToggle";
+	public static final String Broadcast_ADDTOQUEUE= "com.bss.arrahmanlyrics.activites.addToQueue";
+	public static final String Broadcast_REMOVEFROMQUERE= "com.bss.arrahmanlyrics.activites.removeFromQueue";
+
+
 	LinearLayout layout;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

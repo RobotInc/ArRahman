@@ -61,5 +61,6 @@ dependencies {
     compile 'me.piruin:quickaction:2.3'
     testCompile 'junit:junit:4.12'
     compile 'com.h6ah4i.android.widget.verticalseekbar:verticalseekbar:0.7.2'
+    compile 'com.github.claucookie.miniequalizer:library:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

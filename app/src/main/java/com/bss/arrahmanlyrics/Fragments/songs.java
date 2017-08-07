@@ -444,7 +444,8 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
                 list.add(song);
                 StorageUtil newUtil = new StorageUtil(getContext());
                 newUtil.storeAudio((ArrayList<Song>) list);
-                Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+
+                Intent setplaylist = new Intent(MainActivity.Broadcast_ADDTOQUEUE);
                 getActivity().sendBroadcast(setplaylist);
                 Toast.makeText(getContext(), song.getSongTitle() + " is added to queue", Toast.LENGTH_SHORT).show();
                 break;

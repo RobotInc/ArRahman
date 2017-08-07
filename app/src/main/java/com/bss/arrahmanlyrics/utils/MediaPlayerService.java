@@ -28,6 +28,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bss.arrahmanlyrics.activites.MainActivity;
 import com.bss.arrahmanlyrics.activites.MainActivity;
@@ -168,6 +169,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         register_shuffle();
         register_unShuffle();
         register_eqToggle();
+        register_addToQueue();
+        register_removeFromQueue();
     }
 
     //Handle errors
@@ -327,7 +330,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         /*try {
-			//Load data from SharedPreferences
+            //Load data from SharedPreferences
 
 			StorageUtil storage = new StorageUtil(getApplicationContext());
 			audioList = storage.loadAudio();
@@ -391,6 +394,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         unregisterReceiver(shuffle);
         unregisterReceiver(unShuffle);
         unregisterReceiver(eqToggle);
+        unregisterReceiver(addToQueue);
+        unregisterReceiver(removeFromQueue);
 
 
         //clear cached playlist
@@ -411,6 +416,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 audioList = storage.loadAudio();
                 audioIndex = storage.loadAudioIndex();
             }
+            songCount.clear();
+            for (Song song : audioList) {
+                songCount.put(song, 0);
+            }
 
 
         }
@@ -421,6 +430,64 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         IntentFilter filter = new IntentFilter(MainActivity.Broadcast_NEW_ALBUM);
         registerReceiver(setNewAlbum, filter);
     }
+
+    private BroadcastReceiver addToQueue = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            //Get the new media index form SharedPreferences
+            if (shuffleOn) {
+                StorageUtil storage = new StorageUtil(getApplicationContext());
+                audioList = getShuffledList(storage.loadAudio());
+
+            } else {
+                StorageUtil storage = new StorageUtil(getApplicationContext());
+                audioList = storage.loadAudio();
+
+            }
+            for (Song song : audioList) {
+                if (!songCount.containsKey(song))
+                    songCount.put(song, 0);
+            }
+
+
+        }
+    };
+
+    private void register_addToQueue() {
+        //Register playNewMedia receiver
+        IntentFilter filter = new IntentFilter(MainActivity.Broadcast_ADDTOQUEUE);
+        registerReceiver(addToQueue, filter);
+    }
+
+    private BroadcastReceiver removeFromQueue = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            //Get the new media index form SharedPreferences
+            if (shuffleOn) {
+                StorageUtil storage = new StorageUtil(getApplicationContext());
+                audioList = getShuffledList(storage.loadAudio());
+
+            } else {
+                StorageUtil storage = new StorageUtil(getApplicationContext());
+                audioList = storage.loadAudio();
+
+            }
+            if (songCount.containsKey(activeAudio)) {
+                songCount.remove(activeAudio);
+            }
+
+
+        }
+    };
+
+    private void register_removeFromQueue() {
+        //Register playNewMedia receiver
+        IntentFilter filter = new IntentFilter(MainActivity.Broadcast_REMOVEFROMQUERE);
+        registerReceiver(removeFromQueue, filter);
+    }
+
 
     //Becoming noisy
     private BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
@@ -494,12 +561,17 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             //A PLAY_NEW_AUDIO action received
             //reset mediaPlayer to play the new Audio
             stopMedia();
-           if (mediaPlayer != null) {
+            if (mediaPlayer != null) {
 
                 mediaPlayer.reset();
-           }
+            }
 
             initMediaPlayer();
+            if (songCount.containsKey(activeAudio)) {
+                int value = songCount.get(activeAudio);
+                songCount.put(activeAudio, value + 1);
+            }
+
             updateMetaData();
             buildNotification(PlaybackStatus.PLAYING);
         }
@@ -598,10 +670,16 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             //if last in playlist
             audioIndex = 0;
             activeAudio = audioList.get(audioIndex);
-        } else {
+        } else if (audioIndex >= audioList.size()) {
+            audioIndex = 0;
+            activeAudio = audioList.get(audioIndex);
             //get next in playlist
+
+
+        } else {
             activeAudio = audioList.get(++audioIndex);
         }
+
 
         //Update stored index
         new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
@@ -1021,7 +1099,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }, 100); // 1 second delay (takes millis)
 
     }
-
 
 
     public float getDeviceVolume() {

@@ -82,7 +82,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 	private String mParam1;
 	private String mParam2;
 	FastScrollRecyclerView songlistView;
-	fragmentSongAdapter adapter;
+	public fragmentSongAdapter adapter;
 	List<Song> passedList;
 	List<songWithTitle> songsListArray;
 	List<songWithTitle> filtered;
@@ -128,13 +128,14 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 		for (Song song : list) {
 			if (song.getMovieTitle().equalsIgnoreCase(songwith.getMovietitle()) && song.getSongTitle().equalsIgnoreCase(songwith.getSongTitle())) {
 				list.remove(song);
+
 				passedList.remove(song);
 				StorageUtil newUtil = new StorageUtil(getContext());
 				newUtil.storeAudio((ArrayList<Song>) list);
 				songsListArray.remove(songwith);
 
 				adapter.notifyDataSetChanged();
-				Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+				Intent setplaylist = new Intent(lyricsActivity.Broadcast_REMOVEFROMQUERE);
 				getActivity().sendBroadcast(setplaylist);
 				Toast.makeText(getContext(), song.getSongTitle() + " is removed from queue", Toast.LENGTH_SHORT).show();
 				break;
@@ -332,6 +333,7 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 			if (song.getSongTitle().equals(songTitle)) {
 				int index = songsListArray.indexOf(song);
 				songlistView.scrollToPosition(index);
+
 				break;
 			}
 		}
@@ -368,4 +370,11 @@ public class songList extends Fragment implements SearchView.OnQueryTextListener
 					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
+
+	public void printSongNames(ArrayList<Song> list){
+		for(Song song : list){
+			Log.i("songname",song.getSongTitle());
+		}
+	}
+	
 }

@@ -581,7 +581,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
                 list.add(song);
                 StorageUtil newUtil = new StorageUtil(getApplicationContext());
                 newUtil.storeAudio((ArrayList<Song>) list);
-                Intent setplaylist = new Intent(lyricsActivity.Broadcast_NEW_ALBUM);
+                Intent setplaylist = new Intent(MainActivity.Broadcast_ADDTOQUEUE);
                 sendBroadcast(setplaylist);
                 Toast.makeText(getApplicationContext(), song.getSongTitle() + " is added to queue", Toast.LENGTH_SHORT).show();
                 break;
