@@ -311,6 +311,9 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                     int position = player.getCurrrentDuration();
                     bar.setProgress(position);
                     currentDur.setText(Helper.durationCalculator(position));
+                    setDetails();
+                }else {
+                    play.setImageResource(R.drawable.btnplay);
 
                 }
 
@@ -547,6 +550,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
         if(dialog.isShowing()){
             dialog.hide();
         }
+        isSetDetails = false;
         setDetails();
 
     }
@@ -752,9 +756,6 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
                         dialog.hide();
                     }
                 }
-            }else {
-                play.setImageResource(R.drawable.btnplay);
-
             }
         }
 

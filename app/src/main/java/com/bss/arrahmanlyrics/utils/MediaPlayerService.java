@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.bss.arrahmanlyrics.activites.MainActivity;
 import com.bss.arrahmanlyrics.activites.MainActivity;
 
+import com.bss.arrahmanlyrics.activites.lyricsActivity;
 import com.bss.arrahmanlyrics.mainApp;
 import com.bss.arrahmanlyrics.models.Song;
 
@@ -91,6 +92,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     //AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 101;
     public ServiceCallbacks callbacks;
+    public mainActivityCallback maincallback;
     private int iVolume;
 
     private final static int INT_VOLUME_MAX = 100;
@@ -100,6 +102,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public interface ServiceCallbacks {
         void updateUi();
+
+
+    }
+    public interface mainActivityCallback{
+        void update();
 
 
     }
@@ -204,7 +211,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             Log.i("prepare", "not null");
             callbacks.updateUi();
 
+
         }
+
         playMedia();
 
     }
@@ -614,8 +623,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 if (mediaPlayer == null) return;
                 resumeMedia();
                 buildNotification(PlaybackStatus.PLAYING);
-                if(callbacks != null){
+                if (callbacks != null) {
                     callbacks.updateUi();
+                }
+                if(maincallback !=null){
+                    maincallback.update();
                 }
             }
 
@@ -626,8 +638,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 pauseMedia();
                 buildNotification(PlaybackStatus.PAUSED);
                 notificationBuilder.setOngoing(false);
-                if(callbacks != null){
+                if (callbacks != null) {
                     callbacks.updateUi();
+                }
+                if(maincallback !=null){
+                    maincallback.update();
                 }
             }
 
@@ -638,8 +653,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToNext();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
-                if(callbacks != null){
+                if (callbacks != null) {
                     callbacks.updateUi();
+                }
+                if(maincallback !=null){
+                    maincallback.update();
                 }
             }
 
@@ -650,8 +668,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToPrevious();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
-                if(callbacks != null){
+                if (callbacks != null) {
                     callbacks.updateUi();
+                }
+                if(maincallback !=null){
+                    maincallback.update();
                 }
             }
 
@@ -662,8 +683,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 removeNotification();
                 //Stop the service
                 stopSelf();
-                if(callbacks != null){
+                if (callbacks != null) {
                     callbacks.updateUi();
+                }
+                if(maincallback !=null){
+                    maincallback.update();
                 }
             }
 
@@ -755,13 +779,18 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.ic_launcher); //replace with your own image
 
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
         // Create a new Notification
         notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setShowWhen(false)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setCategory(Intent.CATEGORY_APP_MUSIC)
-                 .setPriority(Notification.PRIORITY_DEFAULT)
+                .setPriority(Notification.PRIORITY_DEFAULT)
                 // Set the Notification style
                 .setStyle(new NotificationCompat.MediaStyle()
                         // Attach our MediaSession token
@@ -775,7 +804,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
                 // Set Notification content information
-
+                .setContentIntent(contentIntent)
                 .setContentTitle(activeAudio.getMovieTitle())
                 .setContentInfo(activeAudio.getSongTitle())
                 // Add playback actions
@@ -788,6 +817,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             notificationBuilder.setOngoing(false);
         }
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notificationBuilder.build());
+
     }
 
     private void removeNotification() {
@@ -881,6 +911,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public void setCallbacks(ServiceCallbacks callbacks) {
         this.callbacks = callbacks;
+    }
+    public void setMainCallbacks(mainActivityCallback callbacks) {
+        this.maincallback= callbacks;
     }
 
     public Song getActiveAudio() {
@@ -1065,8 +1098,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     h.postDelayed(this, 100);
                 else {
                     mediaPlayer.pause();
-                    if(callbacks != null){
+                    if (callbacks != null) {
                         callbacks.updateUi();
+                    }
+                    if(maincallback !=null){
+                        maincallback.update();
                     }
                     //_player.release();
                 }
@@ -1087,6 +1123,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             public void run() {
 
                 mediaPlayer.start();
+                if(maincallback != null){
+                    maincallback.update();
+                }
                 // can call h again after work!
                 time += 100;
                 volume = (deviceVolume * time) / duration;
@@ -1095,6 +1134,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     h.postDelayed(this, 100);
             }
         }, 100); // 1 second delay (takes millis)
+
 
     }
 
@@ -1113,6 +1153,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     if (callbacks != null) {
                         callbacks.updateUi();
 
+                    }
+                    if(maincallback !=null){
+                        maincallback.update();
                     }
                 }
 

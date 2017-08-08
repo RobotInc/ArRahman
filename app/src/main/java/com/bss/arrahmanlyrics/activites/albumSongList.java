@@ -382,6 +382,9 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
                     int position = player.getCurrrentDuration();
                     seekbar.setProgress(position);
                     setDetails();
+
+                }else {
+                    smallplay.setImageResource(android.R.drawable.ic_media_play);
                 }
 
 
