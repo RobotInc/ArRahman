@@ -524,7 +524,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         Log.i("called","on destroy");
         dialog.dismiss();
-        player.stopSelf();
+        //player.stopSelf();
 
 
             //service is active

@@ -1216,10 +1216,5 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         return shuffleOn;
     }
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mediaPlayer.release();
-        stopSelf();
-    }
+
 }
