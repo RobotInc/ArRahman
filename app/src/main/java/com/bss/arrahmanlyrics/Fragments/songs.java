@@ -384,7 +384,7 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
         getActivity().sendBroadcast(broadcastIntent);
         ((MainActivity) getActivity()).setIsDetailSet(false);
         ((MainActivity) getActivity()).setDialog();
-
+        playListSet = false;
         Toast.makeText(getContext(), song.getMovietitle(), Toast.LENGTH_SHORT).show();
 
 
@@ -476,5 +476,6 @@ public class songs extends Fragment implements SearchView.OnQueryTextListener {
         }
 
     }
+
 
 }

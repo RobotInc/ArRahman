@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity
     TextView movietitle, songtitle;
     @Nullable
     SeekBar seekbar;
+    Intent playerIntent;
     private Handler mHandler = new Handler();
     Boolean isDetailSet = false;
     public static final String Broadcast_PLAY_NEW_AUDIO = "com.bss.arrahmanlyrics.activites.PlayNewAudio";
@@ -475,7 +476,7 @@ public class MainActivity extends AppCompatActivity
         Log.i("testing", "am in start");
         isDetailSet = false;
         if (!serviceBound) {
-            Intent playerIntent = new Intent(this, MediaPlayerService.class);
+            playerIntent = new Intent(this, MediaPlayerService.class);
             startService(playerIntent);
             bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE);
             Log.i("bounded", "service bounded");
@@ -491,6 +492,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         Log.i("testing", "am in resume");
         isDetailSet = false;
+
 
 
     }
@@ -520,14 +522,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i("called","on destroy");
         dialog.dismiss();
-        if (serviceBound) {
-            unbindService(serviceConnection);
-            player.setMainCallbacks(null);
+        player.stopSelf();
+
+
             //service is active
             //player.stopSelf();
 
-        }
+
+
 
     }
 
@@ -578,6 +582,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i("CalledSet", "called set details");
 
             }else {
+
                 seekbar.setMax(player.getDuration());
                 Song song = player.getActiveAudio();
                 if(song == null){

@@ -367,13 +367,5 @@ public class albums extends Fragment implements SearchView.OnQueryTextListener{
 		return filteralbumlist;
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-
-	}
-
-
-
 
 }

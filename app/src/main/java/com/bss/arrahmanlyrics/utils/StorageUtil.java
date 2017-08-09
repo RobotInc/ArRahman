@@ -60,4 +60,6 @@ public class StorageUtil {
 		editor.clear();
 		editor.commit();
 	}
+
+
 }

@@ -90,7 +90,7 @@ android:layout_below="@id/small_seekbar"
                         android:ellipsize="end"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:text="Select a Song"
+                        android:text=""
                         android:textColor="#ffffff"
                         android:textSize="16sp"/>
 
@@ -103,7 +103,7 @@ android:layout_below="@id/small_seekbar"
                         android:gravity="center"
                         android:maxLines="1"
                         android:paddingTop="4dp"
-                        android:text="To play"
+                        android:text=""
                         android:textColor="#ffffff"
                         android:textSize="13sp"/>
 

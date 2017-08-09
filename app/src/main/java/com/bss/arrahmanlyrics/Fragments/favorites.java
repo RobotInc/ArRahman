@@ -257,7 +257,12 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
 
             }
         } else {
-            Log.e("fav null", String.valueOf(favoriteList));
+            Intent mStartActivity = new Intent(getContext(), MainActivity.class);
+            int mPendingIntentId = 123456;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(getContext(), mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager mgr = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+            System.exit(0);
         }
 
         filtered = songlist;
@@ -355,13 +360,6 @@ public class favorites extends Fragment implements SearchView.OnQueryTextListene
         //dialog.dismiss();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        playListSet = false;
-
-
-    }
 
     public void Toast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();

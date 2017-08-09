@@ -151,7 +151,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
         Glide.with(mContext).load(actualsong.getImages()).into(holder.imageView);
 
         holder.lyricist.setText(FirstLetterUpperCase.convert("Lyricist: " + actualsong.getLyricistName()));
-        holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: " + actualsong.getMovietitle()));
+        holder.movietitle.setText(FirstLetterUpperCase.convert("Movie: " + checkForSpace(actualsong.getMovietitle())));
 
 
        // holder.eq.setVisibility(View.INVISIBLE);
@@ -182,6 +182,7 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
         return songlist.size();
     }
     public songWithTitle getmodel(String movie,String songTitle){
+        Log.i("songadpater",movie+" "+songTitle);
         movie = movie.replaceAll("Movie: ","");
         for(songWithTitle songwith:songlist){
 
@@ -217,6 +218,13 @@ public class fragmentSongAdapter extends RecyclerView.Adapter<fragmentSongAdapte
         notifyDataSetChanged();
     }
 
+    public String checkForSpace(String movieTitle){
+        String value = movieTitle;
+        if(value.charAt(0)==' '){
+            value = value.substring(1);
+        }
 
+        return value;
+    }
 
 }

@@ -99,6 +99,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private final static int INT_VOLUME_MIN = 0;
     private final static float FLOAT_VOLUME_MAX = 1;
     private final static float FLOAT_VOLUME_MIN = 0;
+    private albumActivityCallback albumcallback;
+
+    public void stopEverything() {
+        stopForeground(true);
+        stopSelf();
+
+    }
 
     public interface ServiceCallbacks {
         void updateUi();
@@ -107,6 +114,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
     public interface mainActivityCallback{
         void update();
+
+
+    }
+    public interface albumActivityCallback{
+        void updateui();
 
 
     }
@@ -212,6 +224,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             callbacks.updateUi();
 
 
+        } if (maincallback!= null) {
+            Log.i("prepare", "not null");
+            maincallback.update();
+
+
+        }if (albumcallback!= null) {
+            Log.i("prepare", "not null");
+            albumcallback.updateui();
         }
 
         playMedia();
@@ -378,13 +398,15 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
         //Handle Intent action from MediaSession.TransportControls
         handleIncomingActions(intent);
-        return START_STICKY;
-        //return super.onStartCommand(intent, flags, startId);
+        //return START_NOT_STICKY;
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        removeNotification();
+        Log.i("musicS","called");
         if (mediaPlayer != null) {
             stopMedia();
             mediaPlayer.release();
@@ -395,8 +417,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
         }
 
-        removeNotification();
 
+        Log.i("musicS","after notification");
         //unregister BroadcastReceivers
         unregisterReceiver(becomingNoisyReceiver);
         unregisterReceiver(playNewAudio);
@@ -588,6 +610,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
             updateMetaData();
             buildNotification(PlaybackStatus.PLAYING);
+            StorageUtil setsong = new StorageUtil(getApplicationContext());
+
         }
     };
 
@@ -628,6 +652,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 }
                 if(maincallback !=null){
                     maincallback.update();
+                }if (albumcallback!= null) {
+                    Log.i("prepare", "not null");
+                    albumcallback.updateui();
                 }
             }
 
@@ -643,6 +670,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 }
                 if(maincallback !=null){
                     maincallback.update();
+                }if (albumcallback!= null) {
+                    Log.i("prepare", "not null");
+                    albumcallback.updateui();
                 }
             }
 
@@ -653,12 +683,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToNext();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
-                if (callbacks != null) {
-                    callbacks.updateUi();
-                }
-                if(maincallback !=null){
-                    maincallback.update();
-                }
+
             }
 
             @Override
@@ -668,12 +693,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToPrevious();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
-                if (callbacks != null) {
-                    callbacks.updateUi();
-                }
-                if(maincallback !=null){
-                    maincallback.update();
-                }
+
             }
 
             @Override
@@ -688,6 +708,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 }
                 if(maincallback !=null){
                     maincallback.update();
+                }if (albumcallback!= null) {
+                    Log.i("prepare", "not null");
+                    albumcallback.updateui();
                 }
             }
 
@@ -780,9 +803,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 R.drawable.ic_launcher); //replace with your own image
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendInt = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Create a new Notification
         notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
@@ -804,7 +826,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
                 // Set Notification content information
-                .setContentIntent(contentIntent)
+                .setContentIntent(pendInt)
                 .setContentTitle(activeAudio.getMovieTitle())
                 .setContentInfo(activeAudio.getSongTitle())
                 // Add playback actions
@@ -823,6 +845,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private void removeNotification() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
+        stopForeground(true);
+        //notificationManager.cancelAll();
     }
 
     private PendingIntent playbackAction(int actionNumber) {
@@ -914,6 +938,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
     public void setMainCallbacks(mainActivityCallback callbacks) {
         this.maincallback= callbacks;
+    }
+    public void setMainCallbacks(albumActivityCallback callbacks) {
+        this.albumcallback = callbacks;
     }
 
     public Song getActiveAudio() {
@@ -1103,7 +1130,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     }
                     if(maincallback !=null){
                         maincallback.update();
+                    }if (albumcallback!= null) {
+                        Log.i("prepare", "not null");
+                        albumcallback.updateui();
                     }
+
                     //_player.release();
                 }
             }
@@ -1156,6 +1187,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     }
                     if(maincallback !=null){
                         maincallback.update();
+                    }if (albumcallback!= null) {
+                        Log.i("prepare", "not null");
+                        albumcallback.updateui();
                     }
                 }
 
@@ -1180,5 +1214,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public boolean isShuffleOn() {
         return shuffleOn;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mediaPlayer.release();
+        stopSelf();
     }
 }

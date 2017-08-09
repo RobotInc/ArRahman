@@ -61,7 +61,7 @@ import java.util.TreeSet;
 
 import static android.R.color.holo_orange_light;
 
-public class albumSongList extends AppCompatActivity implements View.OnClickListener {
+public class albumSongList extends AppCompatActivity implements View.OnClickListener, MediaPlayerService.albumActivityCallback {
     AlbumSongAdapter adapter;
     ArrayList<slideSong> list;
     ArrayList<Song> passedList;
@@ -84,6 +84,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
     boolean isSetDetails = false;
     boolean playListSet = false;
     ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +135,6 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
                 sendBroadcast(broadcastIntent);
                 Toast.makeText(getApplicationContext(), "Current playlist replaced with " + FirstLetterUpperCase.convert(getIntent().getExtras().getString("Title")) + " album", Toast.LENGTH_SHORT).show();
 
-                isSetDetails = false;
                 dialog.setMessage("loading song");
                 dialog.show();
 
@@ -378,12 +378,12 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
         @Override
         public void run() {
             if (player != null) {
-                if(player.isPlaying()){
+                if (player.isPlaying()) {
                     int position = player.getCurrrentDuration();
                     seekbar.setProgress(position);
                     setDetails();
 
-                }else {
+                } else {
                     smallplay.setImageResource(android.R.drawable.ic_media_play);
                 }
 
@@ -400,7 +400,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
             unbindService(serviceConnection);
             player.setCallbacks(null);
         }
-        if(dialog != null){
+        if (dialog != null) {
             dialog.dismiss();
         }
 
@@ -409,7 +409,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        isSetDetails = false;
+
         if (!serviceBound) {
             Intent playerIntent = new Intent(this, MediaPlayerService.class);
             startService(playerIntent);
@@ -426,7 +426,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
             serviceBound = false;
             //player.setCallbacks(null);
         }
-        if(dialog != null){
+        if (dialog != null) {
             dialog.dismiss();
         }
     }
@@ -434,23 +434,30 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
     private void setDetails() {
         if (player != null) {
             if (player.isPlaying()) {
-                if (!isSetDetails) {
-                    if(dialog.isShowing()){
-                        dialog.hide();
-                    }
-                    seekbar.setMax(player.getDuration());
-                    Song song = player.getActiveAudio();
-                    songtitle.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
-                    movietitle.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
-                    smallplay.setImageResource(android.R.drawable.ic_media_pause);
-                    setBackground(song);
-                    isSetDetails = true;
 
-
+                if (dialog.isShowing()) {
+                    dialog.hide();
                 }
+                seekbar.setMax(player.getDuration());
+                Song song = player.getActiveAudio();
+                songtitle.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
+                movietitle.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
+                smallplay.setImageResource(android.R.drawable.ic_media_pause);
+                setBackground(song);
 
 
+            }else {
+
+                seekbar.setMax(player.getDuration());
+                Song song = player.getActiveAudio();
+                if(song == null){
+                    return;
+                }
+                songtitle.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
+                movietitle.setText(FirstLetterUpperCase.convert(song.getMovieTitle()));
+                smallplay.setImageResource(android.R.drawable.ic_media_play);
             }
+
         }
     }
 
@@ -521,7 +528,7 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
         storage.storeAudioIndex(0);
         Intent broadcastIntent = new Intent(lyricsActivity.Broadcast_PLAY_NEW_AUDIO);
         sendBroadcast(broadcastIntent);
-        isSetDetails = false;
+
         dialog.setMessage("loading song");
         dialog.show();
         Toast.makeText(getApplicationContext(), song.getSongName(), Toast.LENGTH_SHORT).show();
@@ -559,10 +566,8 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
         sendBroadcast(broadcastIntent);
 
 
-        isSetDetails = false;
         dialog.setMessage("loading song");
         dialog.show();
-
 
 
     }
@@ -595,26 +600,31 @@ public class albumSongList extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public void addToFavorite(slideSong songwith){
+    public void addToFavorite(slideSong songwith) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String movieTitle = getIntent().getExtras().getString("Title");
 
-        if(mainApp.getSp().addToFavorite(movieTitle, songwith.getSongName(), user)){
+        if (mainApp.getSp().addToFavorite(movieTitle, songwith.getSongName(), user)) {
             Toast.makeText(getApplicationContext(), "Added to Favorite", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(getApplicationContext(), "Already Exist", Toast.LENGTH_SHORT).show();
         }
 
     }
-    public void removeFromFavorite(slideSong songwith){
+
+    public void removeFromFavorite(slideSong songwith) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String movieTitle = getIntent().getExtras().getString("Title");
-        if(mainApp.getSp().removeFromFavorite(movieTitle, songwith.getSongName(), user)){
+        if (mainApp.getSp().removeFromFavorite(movieTitle, songwith.getSongName(), user)) {
             Toast.makeText(getApplicationContext(), "Removed from Favorite", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(getApplicationContext(), "Add to Favorites First", Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    @Override
+    public void updateui() {
+        setDetails();
+    }
 }
