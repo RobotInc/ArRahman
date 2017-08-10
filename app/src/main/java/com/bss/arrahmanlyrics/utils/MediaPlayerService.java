@@ -74,6 +74,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     HashMap<Song, Integer> songCount = new HashMap<>();
     private boolean mLostAudioFocus = false;
     private boolean mIsDucked = false;
+    private boolean audioLost = false;
     //List of available Audio files
     private ArrayList<Song> audioList;
     NotificationCompat.Builder notificationBuilder;
@@ -112,12 +113,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
 
     }
-    public interface mainActivityCallback{
+
+    public interface mainActivityCallback {
         void update();
 
 
     }
-    public interface albumActivityCallback{
+
+    public interface albumActivityCallback {
         void updateui();
 
 
@@ -191,6 +194,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         register_eqToggle();
         register_addToQueue();
         register_removeFromQueue();
+        registerheadsetState();
     }
 
     //Handle errors
@@ -224,12 +228,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             callbacks.updateUi();
 
 
-        } if (maincallback!= null) {
+        }
+        if (maincallback != null) {
             Log.i("prepare", "not null");
             maincallback.update();
 
 
-        }if (albumcallback!= null) {
+        }
+        if (albumcallback != null) {
             Log.i("prepare", "not null");
             albumcallback.updateui();
         }
@@ -250,6 +256,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
                 if (mediaPlayer.isPlaying()) {
                     pauseMedia();
+
                     //service.stopSelf();
                 }
                 break;
@@ -407,7 +414,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onDestroy() {
         super.onDestroy();
         removeNotification();
-        Log.i("musicS","called");
+        Log.i("musicS", "called");
         if (mediaPlayer != null) {
             stopMedia();
             mediaPlayer.release();
@@ -419,7 +426,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
 
 
-        Log.i("musicS","after notification");
+        Log.i("musicS", "after notification");
         //unregister BroadcastReceivers
         unregisterReceiver(becomingNoisyReceiver);
         unregisterReceiver(playNewAudio);
@@ -433,12 +440,30 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         unregisterReceiver(eqToggle);
         unregisterReceiver(addToQueue);
         unregisterReceiver(removeFromQueue);
+        unregisterReceiver(headsetListener);
 
 
         //clear cached playlist
         new StorageUtil(getApplicationContext()).clearCachedAudioPlaylist();
     }
+    private BroadcastReceiver headsetListener = new BroadcastReceiver() {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG) && isPlaying()) {
+
+                pauseMedia();
+
+
+
+            }
+
+        }
+    };
+    public void registerheadsetState() {
+        IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(headsetListener, receiverFilter);
+    }
     private BroadcastReceiver setNewAlbum = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -559,16 +584,20 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     case TelephonyManager.CALL_STATE_OFFHOOK:
                     case TelephonyManager.CALL_STATE_RINGING:
                         if (mediaPlayer != null) {
-                            pauseMedia();
-                            ongoingCall = true;
+                            if (mediaPlayer.isPlaying()) {
+                                pauseMedia();
+                                ongoingCall = true;
+                            }
                         }
                         break;
                     case TelephonyManager.CALL_STATE_IDLE:
                         // Phone idle. Start playing.
                         if (mediaPlayer != null) {
                             if (ongoingCall) {
+
                                 ongoingCall = false;
                                 resumeMedia();
+
                             }
                         }
                         break;
@@ -651,9 +680,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 if (callbacks != null) {
                     callbacks.updateUi();
                 }
-                if(maincallback !=null){
+                if (maincallback != null) {
                     maincallback.update();
-                }if (albumcallback!= null) {
+                }
+                if (albumcallback != null) {
                     Log.i("prepare", "not null");
                     albumcallback.updateui();
                 }
@@ -669,9 +699,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 if (callbacks != null) {
                     callbacks.updateUi();
                 }
-                if(maincallback !=null){
+                if (maincallback != null) {
                     maincallback.update();
-                }if (albumcallback!= null) {
+                }
+                if (albumcallback != null) {
                     Log.i("prepare", "not null");
                     albumcallback.updateui();
                 }
@@ -707,9 +738,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 if (callbacks != null) {
                     callbacks.updateUi();
                 }
-                if(maincallback !=null){
+                if (maincallback != null) {
                     maincallback.update();
-                }if (albumcallback!= null) {
+                }
+                if (albumcallback != null) {
                     Log.i("prepare", "not null");
                     albumcallback.updateui();
                 }
@@ -937,9 +969,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void setCallbacks(ServiceCallbacks callbacks) {
         this.callbacks = callbacks;
     }
+
     public void setMainCallbacks(mainActivityCallback callbacks) {
-        this.maincallback= callbacks;
+        this.maincallback = callbacks;
     }
+
     public void setMainCallbacks(albumActivityCallback callbacks) {
         this.albumcallback = callbacks;
     }
@@ -1129,9 +1163,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     if (callbacks != null) {
                         callbacks.updateUi();
                     }
-                    if(maincallback !=null){
+                    if (maincallback != null) {
                         maincallback.update();
-                    }if (albumcallback!= null) {
+                    }
+                    if (albumcallback != null) {
                         Log.i("prepare", "not null");
                         albumcallback.updateui();
                     }
@@ -1155,7 +1190,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             public void run() {
 
                 mediaPlayer.start();
-                if(maincallback != null){
+                if (maincallback != null) {
                     maincallback.update();
                 }
                 // can call h again after work!
@@ -1186,9 +1221,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                         callbacks.updateUi();
 
                     }
-                    if(maincallback !=null){
+                    if (maincallback != null) {
                         maincallback.update();
-                    }if (albumcallback!= null) {
+                    }
+                    if (albumcallback != null) {
                         Log.i("prepare", "not null");
                         albumcallback.updateui();
                     }
