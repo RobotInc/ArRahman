@@ -49,6 +49,7 @@ import com.bss.arrahmanlyrics.utils.StorageUtil;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.Auth;
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity
     public FirebaseUser user;
     //-private AdView mAdView;
     private InterstitialAd mInterstitialAd;
+    private AdView mAdView;
+
     public MediaPlayerService player;
     public boolean serviceBound = false;
     @Nullable
@@ -203,7 +206,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i("Ads", "onAdClosed");
             }
         });
-        /*mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
 		AdRequest adRequest = new AdRequest.Builder()
 				.build();
 		mAdView.loadAd(adRequest);
@@ -239,7 +242,7 @@ public class MainActivity extends AppCompatActivity
 				// to the app after tapping on an ad.
 				Log.i("Ads", "onAdClosed");
 			}
-		});*/
+		});
         layout = (LinearLayout) findViewById(R.id.smallview);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,7 +284,7 @@ public class MainActivity extends AppCompatActivity
     };
 
 
-    @Override
+   /* @Override
     public void onBackPressed() {
 
         getWindow().closeAllPanels();
@@ -302,7 +305,7 @@ public class MainActivity extends AppCompatActivity
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-        builder.setPositiveButton("QUIT",
+        builder.setPositiveButton("Minimize",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int which) {
@@ -311,7 +314,7 @@ public class MainActivity extends AppCompatActivity
                 });
 
         builder.show();
-    }
+    }*/
 
 
     @Override
@@ -691,6 +694,9 @@ public class MainActivity extends AppCompatActivity
                 startActivity(aboutPage);
                 return true;
 
+            case R.id.exit:
+                System.exit(0);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

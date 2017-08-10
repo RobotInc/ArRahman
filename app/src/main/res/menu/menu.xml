@@ -9,4 +9,8 @@
         android:id="@+id/about"
 
         android:title="About" />
+    <item
+        android:id="@+id/exit"
+
+        android:title="Exit" />
 </menu>
