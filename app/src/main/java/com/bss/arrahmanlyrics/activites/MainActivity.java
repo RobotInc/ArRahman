@@ -257,9 +257,19 @@ public class MainActivity extends AppCompatActivity
                 //songs.putByteArray("image",albumList.get(position).getThumbnail());
 
                 try {
-                    Intent intent = new Intent(getApplicationContext(), lyricsActivity.class);
-                    intent.putExtras(songs);
-                    startActivity(intent);
+                    if(new StorageUtil(getApplicationContext()).loadAudio() !=null){
+                        if(new StorageUtil(getApplicationContext()).loadAudio().size() >0){
+                            Intent intent = new Intent(getApplicationContext(), lyricsActivity.class);
+                            intent.putExtras(songs);
+                            startActivity(intent);
+                        }else {
+                            Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
+                        }
+
+                    }else {
+                        Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
+                    }
+
                 } catch (Exception e) {
                     Log.i("Exception", e.getMessage());
                 }
@@ -641,7 +651,30 @@ public class MainActivity extends AppCompatActivity
 
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
                 tabLayout.setupWithViewPager(mViewPager);
+                mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        if(position == 2){
+                            if (mInterstitialAd.isLoaded()) {
+                                mInterstitialAd.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
                 dialog.hide();
 
             }

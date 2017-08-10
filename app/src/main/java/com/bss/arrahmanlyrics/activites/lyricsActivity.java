@@ -289,14 +289,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
             if(passedList.size()>0) {
                 songTitle = ((Song) passedList.get(0)).getSongTitle();
                 setLyricsManually(movieName,songTitle);
-            }else {
-                finish();
-                Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
-            }
-        }else {
-            finish();
-            Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
-        }
+            }}
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mHandler.post(runnable);
