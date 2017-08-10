@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i("Ads", "onAdClosed");
             }
         });
-        mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView1);
 		AdRequest adRequest = new AdRequest.Builder()
 				.build();
 		mAdView.loadAd(adRequest);
