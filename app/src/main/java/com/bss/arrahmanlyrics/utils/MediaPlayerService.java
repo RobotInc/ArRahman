@@ -398,7 +398,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
         //Handle Intent action from MediaSession.TransportControls
         handleIncomingActions(intent);
-        return START_STICKY;
+
+        return START_STICKY_COMPATIBILITY;
         //return super.onStartCommand(intent, flags, startId);
     }
 
