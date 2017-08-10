@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -161,6 +163,7 @@ public class MainActivity extends AppCompatActivity
 
         //	do{
         if (user != null) {
+            Log.i("Token", "Refreshed token: " + user.getProviderId());
             initUI();
         } else {
 
@@ -207,42 +210,42 @@ public class MainActivity extends AppCompatActivity
             }
         });
         mAdView = (AdView) findViewById(R.id.adView1);
-		AdRequest adRequest = new AdRequest.Builder()
-				.build();
-		mAdView.loadAd(adRequest);
-		mAdView.setAdListener(new AdListener() {
-			@Override
-			public void onAdLoaded() {
-				// Code to be executed when an ad finishes loading.
-				Log.i("Ads", "onAdLoaded");
-			}
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Log.i("Ads", "onAdLoaded");
+            }
 
-			@Override
-			public void onAdFailedToLoad(int errorCode) {
-				// Code to be executed when an ad request fails.
-				Log.i("Ads", "onAdFailedToLoad");
-			}
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                Log.i("Ads", "onAdFailedToLoad");
+            }
 
-			@Override
-			public void onAdOpened() {
-				// Code to be executed when an ad opens an overlay that
-				// covers the screen.
-				Log.i("Ads", "onAdOpened");
-			}
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                Log.i("Ads", "onAdOpened");
+            }
 
-			@Override
-			public void onAdLeftApplication() {
-				// Code to be executed when the user has left the app.
-				Log.i("Ads", "onAdLeftApplication");
-			}
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+                Log.i("Ads", "onAdLeftApplication");
+            }
 
-			@Override
-			public void onAdClosed() {
-				// Code to be executed when when the user is about to return
-				// to the app after tapping on an ad.
-				Log.i("Ads", "onAdClosed");
-			}
-		});
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the user is about to return
+                // to the app after tapping on an ad.
+                Log.i("Ads", "onAdClosed");
+            }
+        });
         layout = (LinearLayout) findViewById(R.id.smallview);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,17 +260,17 @@ public class MainActivity extends AppCompatActivity
                 //songs.putByteArray("image",albumList.get(position).getThumbnail());
 
                 try {
-                    if(new StorageUtil(getApplicationContext()).loadAudio() !=null){
-                        if(new StorageUtil(getApplicationContext()).loadAudio().size() >0){
+                    if (new StorageUtil(getApplicationContext()).loadAudio() != null) {
+                        if (new StorageUtil(getApplicationContext()).loadAudio().size() > 0) {
                             Intent intent = new Intent(getApplicationContext(), lyricsActivity.class);
                             intent.putExtras(songs);
                             startActivity(intent);
-                        }else {
-                            Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "nothing to showup, play or add songs to queue", Toast.LENGTH_SHORT).show();
                         }
 
-                    }else {
-                        Toast.makeText(getApplicationContext(),"nothing to showup, play or add songs to queue",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "nothing to showup, play or add songs to queue", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
@@ -398,7 +401,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 /*	@Override
-	public void updateUi() {
+    public void updateUi() {
 		Log.i("callback","called update ui");
 		if (player != null) {
 			if (player.isPlaying()) {
@@ -444,7 +447,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void update() {
         Log.i("callback", "called update ui");
-       setDetails();
+        setDetails();
     }
 
 
@@ -505,7 +508,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         Log.i("testing", "am in resume");
         isDetailSet = false;
-
+        checkForNotification();
 
 
     }
@@ -535,15 +538,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("called","on destroy");
+        Log.i("called", "on destroy");
         dialog.dismiss();
         //player.stopSelf();
 
 
-            //service is active
-            //player.stopSelf();
-
-
+        //service is active
+        //player.stopSelf();
 
 
     }
@@ -594,11 +595,11 @@ public class MainActivity extends AppCompatActivity
 
                 Log.i("CalledSet", "called set details");
 
-            }else {
+            } else {
 
                 seekbar.setMax(player.getDuration());
                 Song song = player.getActiveAudio();
-                if(song == null){
+                if (song == null) {
                     return;
                 }
                 songtitle.setText(FirstLetterUpperCase.convert(song.getSongTitle()));
@@ -659,7 +660,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onPageSelected(int position) {
-                        if(position == 2){
+                        if (position == 2) {
                             if (mInterstitialAd.isLoaded()) {
                                 mInterstitialAd.show();
                             } else {
@@ -686,6 +687,45 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+    }
+
+    private void checkForNotification() {
+        Bundle bundle = getIntent().getExtras();
+        try {
+            if (String.valueOf(bundle.get("upate")) != null) {
+                final AlertDialog.Builder builder;
+
+                builder = new AlertDialog.Builder(MainActivity.this);
+
+                builder.setTitle("A update Available");
+                builder.setMessage("Please Update the app to improve Performance");
+                builder.setPositiveButton("Update Now",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                                try {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                                }
+                                catch (android.content.ActivityNotFoundException anfe) {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+                                }
+                            }
+                        });
+                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Either of the following two lines should work.
+                        dialog.cancel();
+                        //dialog.dismiss();
+                    }
+                });
+
+                builder.show();
+
+            }
+        } catch (NullPointerException e) {
+
+        }
     }
 
     public void signinTry() {
@@ -760,4 +800,6 @@ public class MainActivity extends AppCompatActivity
         dialog.setMessage("Loading song");
         dialog.show();
     }
+
+
 }
