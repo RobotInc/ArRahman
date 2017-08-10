@@ -508,8 +508,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         Log.i("testing", "am in resume");
         isDetailSet = false;
-        checkForNotification();
-
 
     }
 
@@ -689,44 +687,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void checkForNotification() {
-        Bundle bundle = getIntent().getExtras();
-        try {
-            if (String.valueOf(bundle.get("upate")) != null) {
-                final AlertDialog.Builder builder;
 
-                builder = new AlertDialog.Builder(MainActivity.this);
-
-                builder.setTitle("A update Available");
-                builder.setMessage("Please Update the app to improve Performance");
-                builder.setPositiveButton("Update Now",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
-                                try {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                                }
-                                catch (android.content.ActivityNotFoundException anfe) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
-                                }
-                            }
-                        });
-                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() { // define the 'Cancel' button
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Either of the following two lines should work.
-                        dialog.cancel();
-                        //dialog.dismiss();
-                    }
-                });
-
-                builder.show();
-
-            }
-        } catch (NullPointerException e) {
-
-        }
-    }
 
     public void signinTry() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
