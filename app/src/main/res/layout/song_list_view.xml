@@ -50,8 +50,7 @@
             android:id="@+id/Songtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:maxLines="1"
+
             android:text="SONG TITLE"
             android:textColor="#ffffff"
             android:textSize="16sp"/>
