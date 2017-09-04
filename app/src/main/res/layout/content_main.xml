@@ -22,7 +22,8 @@
             android:layout_alignParentBottom="false"
             android:layout_centerHorizontal="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-2287984365462163/5570471134"></com.google.android.gms.ads.AdView>
+            ads:adUnitId="ca-app-pub-7987343674758455/2453469570">
+        </com.google.android.gms.ads.AdView>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/container"

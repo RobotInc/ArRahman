@@ -36,7 +36,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-2287984365462163/5570471134">
+        ads:adUnitId="ca-app-pub-7987343674758455/2565150215">
     </com.google.android.gms.ads.AdView>
 
         <com.bss.arrahmanlyrics.utils.lyricsTextView

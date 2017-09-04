@@ -173,10 +173,10 @@ public class MainActivity extends AppCompatActivity
 
 
         MobileAds.initialize(getApplicationContext(),
-                "ca-app-pub-2287984365462163~8036573131");
+                "ca-app-pub-7987343674758455~2523296928");
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-2287984365462163/1279872339");
+        mInterstitialAd.setAdUnitId("ca-app-pub-7987343674758455/7178170888");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
