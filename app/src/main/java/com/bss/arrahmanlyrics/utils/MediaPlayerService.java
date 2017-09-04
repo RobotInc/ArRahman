@@ -253,39 +253,50 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
+                if(mediaPlayer != null){
+                    if (mediaPlayer.isPlaying()) {
+                        pauseMedia();
 
-                if (mediaPlayer.isPlaying()) {
-                    pauseMedia();
-
-                    //service.stopSelf();
+                        //service.stopSelf();
+                    }
                 }
+
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.setVolume(0.3f, 0.3f);
-                    mIsDucked = true;
+                if(mediaPlayer != null){
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.setVolume(0.3f, 0.3f);
+                        mIsDucked = true;
+                    }
                 }
+
 
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (mediaPlayer.isPlaying()) {
-                    pauseMedia();
-                    mLostAudioFocus = true;
+                if(mediaPlayer != null){
+                    if (mediaPlayer.isPlaying()) {
+                        pauseMedia();
+                        mLostAudioFocus = true;
+                    }
+
                 }
+
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
-
-                if (mIsDucked) {
-                    float devicevolume = getDeviceVolume();
-                    mediaPlayer.setVolume(devicevolume, devicevolume);
-                    mIsDucked = false;
-                } else if (mLostAudioFocus) {
-                    // If we temporarily lost the audio focus we can resume playback here
-                    if (mediaPlayer.isPlaying()) {
-                        playMedia();
+                if(mediaPlayer != null){
+                    if (mIsDucked) {
+                        float devicevolume = getDeviceVolume();
+                        mediaPlayer.setVolume(devicevolume, devicevolume);
+                        mIsDucked = false;
+                    } else if (mLostAudioFocus) {
+                        // If we temporarily lost the audio focus we can resume playback here
+                        if (mediaPlayer.isPlaying()) {
+                            playMedia();
+                        }
+                        mLostAudioFocus = false;
                     }
-                    mLostAudioFocus = false;
                 }
+
                 break;
             default:
                 Log.d("Audio Focus", "Unknown focus");
