@@ -253,7 +253,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
-                if(mediaPlayer != null){
+                if (mediaPlayer != null) {
                     if (mediaPlayer.isPlaying()) {
                         pauseMedia();
 
@@ -263,7 +263,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                if(mediaPlayer != null){
+                if (mediaPlayer != null) {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.setVolume(0.3f, 0.3f);
                         mIsDucked = true;
@@ -273,7 +273,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if(mediaPlayer != null){
+                if (mediaPlayer != null) {
                     if (mediaPlayer.isPlaying()) {
                         pauseMedia();
                         mLostAudioFocus = true;
@@ -283,7 +283,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
-                if(mediaPlayer != null){
+                if (mediaPlayer != null) {
                     if (mIsDucked) {
                         float devicevolume = getDeviceVolume();
                         mediaPlayer.setVolume(devicevolume, devicevolume);
@@ -457,6 +457,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         //clear cached playlist
         new StorageUtil(getApplicationContext()).clearCachedAudioPlaylist();
     }
+
     private BroadcastReceiver headsetListener = new BroadcastReceiver() {
 
         @Override
@@ -466,15 +467,16 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 pauseMedia();
 
 
-
             }
 
         }
     };
+
     public void registerheadsetState() {
         IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(headsetListener, receiverFilter);
     }
+
     private BroadcastReceiver setNewAlbum = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -777,21 +779,21 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     private void skipToNext() {
+        if (audioList.size() > 0) {
+            if (audioIndex == audioList.size() - 1) {
+                //if last in playlist
+                audioIndex = 0;
+                activeAudio = audioList.get(audioIndex);
+            } else if (audioIndex >= audioList.size()) {
+                audioIndex = 0;
+                activeAudio = audioList.get(audioIndex);
+                //get next in playlist
 
-        if (audioIndex == audioList.size() - 1) {
-            //if last in playlist
-            audioIndex = 0;
-            activeAudio = audioList.get(audioIndex);
-        } else if (audioIndex >= audioList.size()) {
-            audioIndex = 0;
-            activeAudio = audioList.get(audioIndex);
-            //get next in playlist
 
-
-        } else {
-            activeAudio = audioList.get(++audioIndex);
+            } else {
+                activeAudio = audioList.get(++audioIndex);
+            }
         }
-
 
         //Update stored index
         new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
