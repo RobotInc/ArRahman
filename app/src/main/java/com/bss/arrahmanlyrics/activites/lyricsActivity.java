@@ -103,7 +103,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lyrics2);
-        overridePendingTransition(R.anim.slide_in_up, R.anim.fade_back);
+        overridePendingTransition(R.animator.slide_in_up, R.animator.fade_back);
         toolbar = (Toolbar) findViewById(R.id.lyricstoolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -348,7 +348,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
 
     @Override
     protected void onPause() {
-        overridePendingTransition(R.anim.fade_forward, R.anim.slide_out_down);
+        overridePendingTransition(R.animator.fade_forward, R.animator.slide_out_down);
         super.onPause();
 
 
@@ -372,7 +372,7 @@ public class lyricsActivity extends AppCompatActivity implements ImageView.OnCli
     public void onBackPressed() {
         super.onBackPressed();
 
-        overridePendingTransition(R.anim.slide_in_up, R.anim.fade_forward);
+        overridePendingTransition(R.animator.slide_in_up, R.animator.fade_forward);
 
     }
 
